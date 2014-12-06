@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ms_tech.Models.Incidentes>
+﻿@model IEnumerable<ms_tech.ViewModels.IncidentesViewModel>
 
 @{
     ViewBag.Title = "Lista de Incidentes";
@@ -12,22 +12,24 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Clientes.Nombre)
+            Cliente
+        </th>
+
+        <th>
+            Usuario
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Problemas.Nombre)
+            Producto
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Usuarios.Email)
+            Problema
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Fecha)
         </th>
+      
         <th>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Prioridad)
+            Prioridad
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Calificacion)
@@ -43,21 +45,40 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Clientes.Nombre)
+                @Html.DisplayFor(modelItem => item.Clientes.Apellido)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Usuarios.Nombre)
+                @Html.DisplayFor(modelItem => item.Usuarios.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Productos.Nombre)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Problemas.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Usuarios.Email)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Fecha)
             </td>
+            
             <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prioridad)
+                @{
+        switch (item.IdPrioridad)
+        {
+            case 1:
+                <text>Baja</text>;
+                break;
+            case 2:
+            <text>Media</text>;
+            break;
+            case 3:
+            <text>Alta</text>;
+            break;
+            default:
+            break;
+        }
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Calificacion)
@@ -67,8 +88,8 @@
             </td>
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id = item.IdIncidente }) |
-                @Html.ActionLink("Detalles", "Details", new { id = item.IdIncidente }) |
-                @Html.ActionLink("Borrar", "Delete", new { id = item.IdIncidente })
+                @Html.ActionLink("Detalles", "Details", new { id = item.IdIncidente })
+               
             </td>
         </tr>
     }

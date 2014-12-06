@@ -5,6 +5,7 @@ namespace ms_tech.Models
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Linq;
 
     public partial class Usuarios
     {
@@ -43,5 +44,16 @@ namespace ms_tech.Models
         public virtual ICollection<Incidentes> Incidentes { get; set; }
 
         public virtual UsuariosTipos UsuariosTipos { get; set; }
+
+        public int ObtenerId(string userEmail)
+        {
+             ApplicationDbContext db = new ApplicationDbContext();
+            var user = db.Usuarios.Where(a => a.Email.Equals(userEmail)).FirstOrDefault();
+            if (user != null)
+            {
+                return user.IdUsuario;
+            }
+            return 0;
+        } 
     }
 }

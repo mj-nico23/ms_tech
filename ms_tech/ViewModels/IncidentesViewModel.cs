@@ -26,12 +26,24 @@ namespace ms_tech.ViewModels
         [StringLength(500)]
         public string Descripcion { get; set; }
 
-        public byte Prioridad { get; set; }
+        public int IdPrioridad{ get; set; }
+
+        public byte? Calificacion { get; set; }
+
+        [StringLength(500)]
+        public string Comentario { get; set; }
 
         public virtual Clientes Clientes { get; set; }
 
         public virtual Productos Productos { get; set; }
         public virtual Problemas Problemas { get; set; }
+
+        public virtual Prioridades Prioridades { get; set; }
+
+        public virtual Usuarios Usuarios { get; set; }
+
+
+        public string NombreUsuario { get; set; }
 
     }
 }

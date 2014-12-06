@@ -156,6 +156,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Clases\MyFunctions.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\IncidentesController.cs" />
     <Compile Include="Controllers\ProblemasController.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Incidentes.cs" />
     <Compile Include="Models\IncidentesEstados.cs" />
+    <Compile Include="Models\Prioridades.cs" />
     <Compile Include="Models\Problemas.cs" />
     <Compile Include="Models\Productos.cs" />
     <Compile Include="Models\Soluciones.cs" />

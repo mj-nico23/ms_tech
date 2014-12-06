@@ -17,6 +17,13 @@ namespace ms_tech
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Usuarios", action = "Start", id = UrlParameter.Optional }
+                           
+            );
+
+            routes.MapRoute(
+                name: "Incidentes",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Incidentes", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

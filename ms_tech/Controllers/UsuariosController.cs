@@ -209,9 +209,9 @@ namespace ms_tech.Controllers
         {
             //for initialize viewmodel
             var cambiarPasswordVM = new CambiarPasswordViewModel();
-
+            Usuarios usuario = new Usuarios();
             //assign values for viewmodel
-            cambiarPasswordVM.IdUsuario = ObtenerId(User.Identity.Name);
+            cambiarPasswordVM.IdUsuario = usuario.ObtenerId(User.Identity.Name);
 
             if (cambiarPasswordVM.IdUsuario == 0)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -275,15 +275,7 @@ namespace ms_tech.Controllers
             return RedirectToAction("Start", "Usuarios");
         }
 
-        public int ObtenerId(string userEmail)
-        {
-            var user = db.Usuarios.Where(a => a.Email.Equals(userEmail)).FirstOrDefault();
-            if (user != null)
-            {
-                return user.IdUsuario;
-            }
-            return 0;
-        } 
+       
         #endregion
     }
 }

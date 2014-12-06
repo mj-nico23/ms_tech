@@ -22,14 +22,14 @@ namespace ms_tech.Models
 
         public int IdProblema { get; set; }
 
-        [DisplayFormat(DataFormatString="{0:dd/MM/yyyy HH:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Fecha { get; set; }
 
         [Required]
         [StringLength(500)]
         public string Descripcion { get; set; }
 
-        public byte Prioridad { get; set; }
+        public int IdPrioridad { get; set; }
 
         public byte? Calificacion { get; set; }
 
@@ -43,5 +43,7 @@ namespace ms_tech.Models
         public virtual Usuarios Usuarios { get; set; }
 
         public virtual ICollection<IncidentesEstados> IncidentesEstados { get; set; }
+
+        public virtual Prioridades Prioridades { get; set; }
     }
 }

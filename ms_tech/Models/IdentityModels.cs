@@ -45,5 +45,7 @@ namespace ms_tech.Models
         public System.Data.Entity.DbSet<ms_tech.Models.Soluciones> Soluciones { get; set; }
 
         public System.Data.Entity.DbSet<ms_tech.Models.Incidentes> Incidentes { get; set; }
+
+        public System.Data.Entity.DbSet<ms_tech.Models.Prioridades> Prioridades { get; set; }
     }
 }

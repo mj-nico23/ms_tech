@@ -1,25 +1,31 @@
-﻿@model ms_tech.Models.Incidentes
+﻿@model ms_tech.ViewModels.IncidentesViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle Incidente";
 }
 
-<h2>Details</h2>
+<h2>@ViewBag.Title</h2>
 
 <div>
     <h4>Incidentes</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Clientes.Nombre)
+            Cliente
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Clientes.Nombre)
+            @Html.DisplayFor(model => model.Clientes.Apellido)
         </dd>
-
         <dt>
-            @Html.DisplayNameFor(model => model.Problemas.Nombre)
+            Producto
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Productos.Nombre)
+        </dd>
+        <dt>
+            Problema
         </dt>
 
         <dd>
@@ -27,11 +33,12 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Usuarios.Email)
+            Usuario
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Usuarios.Email)
+            @Html.DisplayFor(model => model.Usuarios.Nombre)
+            @Html.DisplayFor(model => model.Usuarios.Apellido)
         </dd>
 
         <dt>
@@ -51,11 +58,26 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Prioridad)
+            Prioridad
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Prioridad)
+            @{
+                switch (Model.IdPrioridad)
+                {
+                    case 1:
+                        <text>Baja</text>;
+                        break;
+                    case 2:
+                    <text>Media</text>;
+                    break;
+                    case 3:
+                    <text>Alta</text>;
+                    break;
+                    default:
+                    break;
+                }
+            }
         </dd>
 
         <dt>
@@ -77,6 +99,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IdIncidente }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.IdIncidente }) |
+    @Html.ActionLink("Volver", "Index")
 </p>
