@@ -8,6 +8,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using ms_tech.Models;
 using ms_tech.ViewModels;
+using ms_tech.Clases;
 
 namespace ms_tech.Controllers
 {
@@ -285,18 +286,37 @@ namespace ms_tech.Controllers
 
         public void Imprimir(int id)
         {
-            Document pdfDoc = new Document(PageSize.A4, 30f, 10f, 30f, 0f);
-            PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
-            pdfDoc.Open();
-            PdfPTable tab_titulo = new PdfPTable(3);
-            tab_titulo.SetWidths(new float[] { 25, 50, 25 });
+            Document pdfDoc = new Document(PageSize.A4, 30f, 10f, 70f, 0f);
+            PdfWriter pdfWriter = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
 
-            pdfDoc.Add(new Paragraph("impresion"));
+            PdfEventsGenerico events = new PdfEventsGenerico();
+            events.Logo = Server.MapPath("/Images") + "/logo.jpg";
+            events.Titulo = "Comprobante de Incidente";
+
+            pdfWriter.PageEvent = events;
+
+            pdfDoc.Open();
+            //PdfPTable tab_titulo = new PdfPTable(3);
+            //tab_titulo.SetWidths(new float[] { 25, 50, 25 });
+
+            //string logoUrl = Server.MapPath("/Images") + "/logo.jpg";
+
+            //iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(logoUrl);
+            
+            //PdfPCell cell1= new PdfPCell(jpg, true);
+            //cell1.Border = 0;
+            //tab_titulo.AddCell(cell1);
+
+            //cell1 =FNC_iTextSharp.GetCell("Comprobante de Incidente", FNC_iTextSharp.Fuente.fArial16b, 1, null, 2);
+            //cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
+            //tab_titulo.AddCell(cell1);
+
+            //pdfDoc.Add(tab_titulo);
+            pdfDoc.Add(new Paragraph("prueba"));
             pdfDoc.Close();
-           
+
             Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", "attachment;" +
-                                           "filename=sample.pdf");
+            Response.AddHeader("content-disposition", "attachment;" + "filename=" + DateTime.Now.Ticks.ToString() + ".pdf");
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Write(pdfDoc);
             Response.End();
