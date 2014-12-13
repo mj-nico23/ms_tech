@@ -17,6 +17,7 @@ namespace ms_tech.Controllers
 
         public ActionResult Start()
         {
+            
             return View();
         }
 

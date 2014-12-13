@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ms_tech.Models;
+using PagedList;
 
 namespace ms_tech.Controllers
 {
@@ -15,15 +16,96 @@ namespace ms_tech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Clientes
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             if (!Request.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Usuarios", new { r = "/Clientes/Index" });
             }
 
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NombreSortParm = sortOrder == "nombre" ? "nombre_desc" : "nombre";
+            ViewBag.ApellidoSortParm = sortOrder == "apellido" ? "apellido_desc" : "apellido";
+            ViewBag.EmailSortParm = sortOrder == "email" ? "email_desc" : "email";
+            ViewBag.TipoSortParm = sortOrder == "tipo" ? "tipo_desc" : "tipo";
+            ViewBag.ActivoSortParm = sortOrder == "activo" ? "activo_desc" : "activo";
+            ViewBag.DireccionSortParm = sortOrder == "direccion" ? "direccion_desc" : "direccion";
+            ViewBag.TelefonoSortParm = sortOrder == "telefono" ? "telefono_desc" : "telefono";
+
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
             var clientes = db.Clientes.Include(c => c.ClientesTipos);
-            return View(clientes.ToList());
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                clientes = clientes.Where(s => s.Nombre.Contains(searchString)
+                                       || s.Apellido.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "tipo":
+                    clientes = clientes.OrderBy(c => c.ClientesTipos.Nombre);
+                    break;
+                case "tipo_desc":
+                    clientes = clientes.OrderByDescending(c => c.ClientesTipos.Nombre);
+                    break;
+                case "nombre":
+                    clientes = clientes.OrderBy(c => c.Nombre);
+                    break;
+                case "nombre_desc":
+                    clientes = clientes.OrderByDescending(c => c.Nombre);
+                    break;
+                case "apellido":
+                    clientes = clientes.OrderBy(c => c.Apellido);
+                    break;
+                case "apellido_desc":
+                    clientes = clientes.OrderByDescending(c => c.Apellido);
+                    break;
+                case "email":
+                    clientes = clientes.OrderBy(c => c.Mail);
+                    break;
+                case "email_desc":
+                    clientes = clientes.OrderByDescending(c => c.Mail);
+                    break;
+                case "activo":
+                    clientes = clientes.OrderByDescending(c => c.Activo);
+                    break;
+                case "activo_desc":
+                    clientes = clientes.OrderBy(c => c.Activo);
+                    break;
+                case "direccion":
+                    clientes = clientes.OrderBy(c => c.Direccion);
+                    break;
+                case "direccion_desc":
+                    clientes = clientes.OrderByDescending(c => c.Direccion);
+                    break;
+                case "telefono":
+                    clientes = clientes.OrderBy(c => c.Telefono);
+                    break;
+                case "telefono_desc":
+                    clientes = clientes.OrderByDescending(c => c.Telefono);
+                    break;
+                default:
+                    clientes = clientes.OrderBy(c => c.IdCliente);
+                    break;
+            }
+
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            //return View(students.ToPagedList(pageNumber, pageSize));
+
+            return View(clientes.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Clientes/Details/5

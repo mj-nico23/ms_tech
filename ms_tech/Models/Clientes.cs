@@ -51,5 +51,6 @@ namespace ms_tech.Models
         public virtual ClientesTipos ClientesTipos { get; set; }
 
         public virtual ICollection<Incidentes> Incidentes { get; set; }
+
     }
 }

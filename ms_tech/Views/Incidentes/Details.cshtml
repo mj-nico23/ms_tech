@@ -95,8 +95,12 @@
         <dd>
             @Html.DisplayFor(model => model.Comentario)
         </dd>
+        <dd>
+            <a href="@Url.Action("Imprimir", "Incidentes", new { id = Model.IdIncidente })" class="btn btn-default" target="_blank"><span>Imprimir</span></a>
+        </dd>
 
     </dl>
+
 </div>
 <p>
     @Html.ActionLink("Editar", "Edit", new { id = Model.IdIncidente }) |

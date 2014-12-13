@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using ms_tech.Models;
 using ms_tech.ViewModels;
-using ms_tech.Clases;
 
 namespace ms_tech.Controllers
 {
@@ -282,6 +281,27 @@ namespace ms_tech.Controllers
             db.Incidentes.Remove(incidentes);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public void Imprimir(int id)
+        {
+            Document pdfDoc = new Document(PageSize.A4, 30f, 10f, 30f, 0f);
+            PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+            pdfDoc.Open();
+            PdfPTable tab_titulo = new PdfPTable(3);
+            tab_titulo.SetWidths(new float[] { 25, 50, 25 });
+
+            pdfDoc.Add(new Paragraph("impresion"));
+            pdfDoc.Close();
+           
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-disposition", "attachment;" +
+                                           "filename=sample.pdf");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Write(pdfDoc);
+            Response.End();
+
+            //return "Se imprime el " + id.ToString();
         }
 
         protected override void Dispose(bool disposing)

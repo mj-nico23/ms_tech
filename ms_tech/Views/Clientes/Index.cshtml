@@ -1,4 +1,6 @@
-﻿@model IEnumerable<ms_tech.Models.Clientes>
+﻿@model PagedList.IPagedList<ms_tech.Models.Clientes>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Lista de Clientes";
@@ -9,70 +11,88 @@
 <p>
     @Html.ActionLink("Nuevo Cliente", "Create")
 </p>
+@using (Html.BeginForm("Index", "Clientes", FormMethod.Get))
+{
+    <p>
+        <span style="font-weight: bold" class="control-label">&nbsp;&nbsp;Filtro:&nbsp;</span> @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block" })
+        <input type="submit" value="Buscar" class="btn btn-default" />
+    </p>
+}
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ClientesTipos.Nombre)
+            @Html.ActionLink("Tipo de Cliente", "Index", new { sortOrder = ViewBag.TipoSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Nombre)
+            @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.NombreSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Apellido)
+            @Html.ActionLink("Apellido", "Index", new { sortOrder = ViewBag.ApellidoSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Mail)
+            @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.EmailSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Activo)
+            @Html.ActionLink("Activo", "Index", new { sortOrder = ViewBag.ActivoSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Direccion)
+            @Html.ActionLink("Dirección", "Index", new { sortOrder = ViewBag.DireccionSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Telefono)
+            @Html.ActionLink("Teléfono", "Index", new { sortOrder = ViewBag.TelefonoSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
-        
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ClientesTipos.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Apellido)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Mail)
-        </td>
-        <td>
-            @if (item.Activo)
-            {
-                <text>Si</text>
-            }
-            else
-            {
-                <text>No</text>
-            }
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Direccion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Telefono)
-        </td>
-        
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.IdCliente }) |
-            @Html.ActionLink("Detalle", "Details", new { id=item.IdCliente }) |
-            @Html.ActionLink("Borrar", "Delete", new { id=item.IdCliente })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientesTipos.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mail)
+            </td>
+            <td>
+                @if (item.Activo)
+                {
+                    <text>Si</text>
+                }
+                else
+                {
+                    <text>No</text>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefono)
+            </td>
+
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.IdCliente }) |
+                @Html.ActionLink("Detalle", "Details", new { id = item.IdCliente }) |
+                @Html.ActionLink("Borrar", "Delete", new { id = item.IdCliente })
+            </td>
+        </tr>
+    }
 
 </table>
+<br />
+
+@{
+    if (Model.PageCount > 1)
+    {
+        <text>Página</text> @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) <text>de</text> @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    }
+}
+
