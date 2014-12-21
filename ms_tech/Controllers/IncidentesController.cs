@@ -284,8 +284,42 @@ namespace ms_tech.Controllers
             return RedirectToAction("Index");
         }
 
-        public void Imprimir(int id)
+        public ActionResult Imprimir(int id)
         {
+            if (!Request.IsAuthenticated)
+            {
+                RedirectToAction("Login", "Usuarios", new { r = "/Incidentes/Imprimir/" + id });
+            }
+
+            IncidentesViewModel incidentesVM = (from s in db.Incidentes
+                                                join p in db.Problemas on s.IdProblema equals p.IdProblema
+                                                join p1 in db.Productos on p.IdProducto equals p1.IdProducto
+                                                join p2 in db.Prioridades on s.IdPrioridad equals p2.IdPrioridad
+                                                join c in db.Clientes on s.IdCliente equals c.IdCliente
+                                                join u in db.Usuarios on s.IdUsuario equals u.IdUsuario
+                                                where s.IdIncidente == id
+                                                select new IncidentesViewModel
+                                                {
+                                                    IdIncidente = s.IdIncidente,
+                                                    IdProblema = s.IdProblema,
+                                                    IdProducto = p.IdProducto,
+                                                    IdCliente = s.IdCliente,
+                                                    Descripcion = s.Descripcion,
+                                                    IdUsuario = s.IdUsuario,
+                                                    Fecha = s.Fecha,
+                                                    Prioridades = p2,
+                                                    Problemas = p,
+                                                    Productos = p1,
+                                                    Clientes = c,
+                                                    NombreUsuario = u.Email
+                                                }).FirstOrDefault();
+
+            if (incidentesVM == null)
+            {
+                return HttpNotFound();
+            }
+
+
             Document pdfDoc = new Document(PageSize.A4, 30f, 10f, 70f, 0f);
             PdfWriter pdfWriter = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
 
@@ -293,26 +327,53 @@ namespace ms_tech.Controllers
             events.Logo = Server.MapPath("/Images") + "/logo.jpg";
             events.Titulo = "Comprobante de Incidente";
 
+            var url_string = Url.Action("Details", "Incidentes", new { id = incidentesVM.IdIncidente }, protocol: Request.Url.Scheme);
+
+            BarcodeQRCode qrcode = new BarcodeQRCode(url_string, 1, 1, null);
+            Image img = qrcode.GetImage();
+            img.ScaleAbsoluteWidth(80);
+
             pdfWriter.PageEvent = events;
 
             pdfDoc.Open();
-            //PdfPTable tab_titulo = new PdfPTable(3);
-            //tab_titulo.SetWidths(new float[] { 25, 50, 25 });
+            PdfPTable tabla1 = new PdfPTable(4);
+            tabla1.SetWidths(new float[] { 18, 35, 25, 25 });
 
-            //string logoUrl = Server.MapPath("/Images") + "/logo.jpg";
+            tabla1.AddCell(FNC_iTextSharp.GetCell(" ", FNC_iTextSharp.Fuente.fArial10, 0, null, 4));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(" ", FNC_iTextSharp.Fuente.fArial10, 0, null, 4));
 
-            //iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(logoUrl);
-            
-            //PdfPCell cell1= new PdfPCell(jpg, true);
-            //cell1.Border = 0;
-            //tab_titulo.AddCell(cell1);
+            tabla1.AddCell(FNC_iTextSharp.GetCell("Incidente Nro:", FNC_iTextSharp.Fuente.fArial10b, 0));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(incidentesVM.IdIncidente.ToString(), FNC_iTextSharp.Fuente.fArial10, 0, null, 2));
 
-            //cell1 =FNC_iTextSharp.GetCell("Comprobante de Incidente", FNC_iTextSharp.Fuente.fArial16b, 1, null, 2);
-            //cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
-            //tab_titulo.AddCell(cell1);
+            PdfPCell cell1 = FNC_iTextSharp.GetCell("", FNC_iTextSharp.Fuente.fArial10, 0, null);
+            cell1.AddElement(img);
+            cell1.Rowspan = 6;
+            tabla1.AddCell(cell1);
 
-            //pdfDoc.Add(tab_titulo);
-            pdfDoc.Add(new Paragraph("prueba"));
+            tabla1.AddCell(FNC_iTextSharp.GetCell("Cliente:", FNC_iTextSharp.Fuente.fArial10b, 0));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(incidentesVM.Clientes.Nombre + " " + incidentesVM.Clientes.Apellido, FNC_iTextSharp.Fuente.fArial10, 0, null, 2));
+
+            tabla1.AddCell(FNC_iTextSharp.GetCell("Producto:", FNC_iTextSharp.Fuente.fArial10b, 0));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(incidentesVM.Productos.Nombre, FNC_iTextSharp.Fuente.fArial10, 0, null, 2));
+
+            tabla1.AddCell(FNC_iTextSharp.GetCell("Problema:", FNC_iTextSharp.Fuente.fArial10b, 0));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(incidentesVM.Problemas.Nombre, FNC_iTextSharp.Fuente.fArial10, 0, null, 2));
+
+            tabla1.AddCell(FNC_iTextSharp.GetCell("Fecha:", FNC_iTextSharp.Fuente.fArial10b, 0));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(incidentesVM.Fecha.ToString("dd/MM/yyyy"), FNC_iTextSharp.Fuente.fArial10, 0, null, 2));
+
+            tabla1.AddCell(FNC_iTextSharp.GetCell("Prioridad:", FNC_iTextSharp.Fuente.fArial10b, 0));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(incidentesVM.Prioridades.Nombre, FNC_iTextSharp.Fuente.fArial10, 0, null, 2));
+
+            tabla1.AddCell(FNC_iTextSharp.GetCell("Descripción:", FNC_iTextSharp.Fuente.fArial10b, 0));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(incidentesVM.Descripcion, FNC_iTextSharp.Fuente.fArial10, 0, null, 3));
+
+            tabla1.AddCell(FNC_iTextSharp.GetCell(" ", FNC_iTextSharp.Fuente.fArial10, 0, null, 4));
+            tabla1.AddCell(FNC_iTextSharp.GetCell(" ", FNC_iTextSharp.Fuente.fArial10, 0, null, 4));
+            tabla1.AddCell(FNC_iTextSharp.GetCell("Para comprobar el estado de su Incidente escanee el codigo con su celular o ingrese a la siguiente dirección: " + url_string, FNC_iTextSharp.Fuente.fArial10, 0, null, 4));
+
+            pdfDoc.Add(tabla1);
+
             pdfDoc.Close();
 
             Response.ContentType = "application/pdf";
@@ -321,7 +382,8 @@ namespace ms_tech.Controllers
             Response.Write(pdfDoc);
             Response.End();
 
-            //return "Se imprime el " + id.ToString();
+            return View(incidentesVM);
+
         }
 
         protected override void Dispose(bool disposing)
