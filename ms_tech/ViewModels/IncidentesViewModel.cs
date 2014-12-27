@@ -22,11 +22,15 @@ namespace ms_tech.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Fecha { get; set; }
 
-        [Required]
+     
         [StringLength(500)]
         public string Descripcion { get; set; }
 
         public int IdPrioridad{ get; set; }
+
+        public int IdEstado { get; set; }
+
+        public string Observaciones { get; set; }
 
         public byte? Calificacion { get; set; }
 
@@ -42,6 +46,9 @@ namespace ms_tech.ViewModels
 
         public virtual Usuarios Usuarios { get; set; }
 
+        public virtual IncidentesEstados IncidentesEstados { get; set; }
+
+        public virtual Estados Estados { get; set; }
 
         public string NombreUsuario { get; set; }
 

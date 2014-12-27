@@ -32,6 +32,11 @@ namespace ms_tech.Controllers
                                 join p2 in db.Prioridades on s.IdPrioridad equals p2.IdPrioridad
                                 join c in db.Clientes on s.IdCliente equals c.IdCliente
                                 join u in db.Usuarios on s.IdUsuario equals u.IdUsuario
+                                //join ie in db.IncidentesEstados on s.IdIncidente equals ie.IdIncidente
+                                //join e in db.Estados on ie.IdEstado equals e.IdEstado
+                                let ie = db.IncidentesEstados.Where(iex => iex.IdIncidente == s.IdIncidente).OrderByDescending(iex => iex.FechaActualizacion).Take(1)
+                                let e = db.Estados.Where(ex => ie.FirstOrDefault().IdEstado == ex.IdEstado).Take(1)
+                                //orderby ie.FirstOrDefault().FechaActualizacion descending
                                 //where s.IdIncidente == id
                                 select new IncidentesViewModel
                                 {
@@ -50,7 +55,10 @@ namespace ms_tech.Controllers
                                     Usuarios = u,
                                     NombreUsuario = u.Email,
                                     Calificacion = s.Calificacion,
-                                    Comentario = s.Comentario
+                                    IdEstado = ie.FirstOrDefault() == null ? 0 : ie.FirstOrDefault().IdEstado,
+                                    IncidentesEstados = ie.FirstOrDefault(),
+                                    Comentario = s.Comentario,
+                                    Estados = e.FirstOrDefault()
                                 });
 
 
@@ -112,14 +120,20 @@ namespace ms_tech.Controllers
                 return RedirectToAction("Login", "Usuarios", new { r = "/Incidentes/Create/" });
             }
 
-            ViewBag.IdCliente = new SelectList(db.Clientes, "IdCliente", "Nombre");
+
+            IncidentesViewModel incidentesVM = new IncidentesViewModel();
+            incidentesVM.Fecha = DateTime.Today;
+
+            var clientes = db.Clientes.Select(u => new
+            {
+                IdCliente = u.IdCliente,
+                Nombre = u.Nombre + " " + u.Apellido
+            });
+            ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre", incidentesVM.IdCliente);
             ViewBag.IdProblema = new SelectList(db.Problemas, "IdProblema", "Nombre");
             ViewBag.IdProducto = new SelectList(db.Productos, "IdProducto", "Nombre");
             ViewBag.IdPrioridad = new SelectList(db.Prioridades.OrderByDescending(x => x.IdPrioridad), "IdPrioridad", "Nombre");
 
-
-            IncidentesViewModel incidentesVM = new IncidentesViewModel();
-            incidentesVM.Fecha = DateTime.Today;
 
 
             return View(incidentesVM);
@@ -147,12 +161,38 @@ namespace ms_tech.Controllers
 
                 db.Incidentes.Add(incidentes);
                 db.SaveChanges();
+
+                IncidentesEstados incidentesEstados = new IncidentesEstados();
+                incidentesEstados.IdIncidente = incidentes.IdIncidente;
+                incidentesEstados.IdEstado = 1;
+                incidentesEstados.FechaActualizacion = DateTime.Now;
+                incidentesEstados.IdUsuario = incidentes.IdUsuario;
+                incidentesEstados.Observacion = "Alta de incidente.";
+                db.IncidentesEstados.Add(incidentesEstados);
+                db.SaveChanges();
+
+
                 return RedirectToAction("Index");
             }
 
-            ViewBag.IdCliente = new SelectList(db.Clientes, "IdCliente", "Nombre", incidentesVM.IdCliente);
+            var usuarios = db.Usuarios.Select(u => new
+            {
+                IdUsuario = u.IdUsuario,
+                Nombre = u.Nombre + " " + u.Apellido
+            });
+
+            ViewBag.IdUsuario = new SelectList(usuarios, "IdUsuario", "Nombre", incidentesVM.IdUsuario);
+
+            var clientes = db.Clientes.Select(u => new
+            {
+                IdCliente = u.IdCliente,
+                Nombre = u.Nombre + " " + u.Apellido
+            });
+            ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre", incidentesVM.IdCliente);
+
+
             ViewBag.IdProblema = new SelectList(db.Problemas, "IdProblema", "Nombre", incidentesVM.IdProblema);
-            ViewBag.IdUsuario = new SelectList(db.Usuarios, "IdUsuario", "Email", incidentesVM.IdUsuario);
+
             ViewBag.IdPrioridad = new SelectList(db.Prioridades.OrderByDescending(x => x.IdPrioridad), "IdPrioridad", "Nombre", incidentesVM.IdPrioridad);
 
             return View(incidentesVM);
@@ -170,13 +210,6 @@ namespace ms_tech.Controllers
             {
                 return RedirectToAction("Login", "Usuarios", new { r = "/Incidentes/Edit/" + id });
             }
-
-
-
-
-
-            //IncidentesViewModel incidentesVM = new IncidentesViewModel();
-            //incidentesVM.Fecha = DateTime.Today;
 
             IncidentesViewModel incidentesVM = (from s in db.Incidentes
                                                 join p in db.Problemas on s.IdProblema equals p.IdProblema
@@ -240,7 +273,6 @@ namespace ms_tech.Controllers
             {
                 Incidentes incidentes = db.Incidentes.Where(a => a.IdIncidente.Equals(incidentesVM.IdIncidente)).FirstOrDefault();
                 db.Entry(incidentes).State = EntityState.Modified;
-                Usuarios usuario = new Usuarios();
                 incidentes.IdUsuario = incidentesVM.IdUsuario;
                 incidentes.IdCliente = incidentesVM.IdCliente;
                 incidentes.IdProblema = incidentesVM.IdProblema;
@@ -257,6 +289,115 @@ namespace ms_tech.Controllers
 
             return View(incidentesVM);
         }
+
+        public ActionResult EditarEstado(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Usuarios", new { r = "/Incidentes/Edit/" + id });
+            }
+
+            IncidentesViewModel incidentesVM = (from s in db.Incidentes
+                                                join p in db.Problemas on s.IdProblema equals p.IdProblema
+                                                join p1 in db.Productos on p.IdProducto equals p1.IdProducto
+                                                join p2 in db.Prioridades on s.IdPrioridad equals p2.IdPrioridad
+                                                join c in db.Clientes on s.IdCliente equals c.IdCliente
+                                                join u in db.Usuarios on s.IdUsuario equals u.IdUsuario
+                                                let ie = db.IncidentesEstados.Where(iex => iex.IdIncidente == s.IdIncidente).OrderByDescending(iex => iex.FechaActualizacion).Take(1)
+                                                //let e = db.Estados.Where(ex => ie.FirstOrDefault().IdEstado == ex.IdEstado).Take(1)
+                                                where s.IdIncidente == id
+                                                select new IncidentesViewModel
+                                                {
+                                                    IdIncidente = s.IdIncidente,
+                                                    IdProblema = s.IdProblema,
+                                                    IdProducto = p.IdProducto,
+                                                    IdCliente = s.IdCliente,
+                                                    Descripcion = s.Descripcion,
+                                                    IdUsuario = s.IdUsuario,
+                                                    Fecha = s.Fecha,
+                                                    Prioridades = p2,
+                                                    Problemas = p,
+                                                    Productos = p1,
+                                                    Clientes = c,
+                                                    IncidentesEstados = ie.FirstOrDefault(),
+                                                    NombreUsuario = u.Email
+                                                }).FirstOrDefault();
+
+            if (incidentesVM == null)
+            {
+                return HttpNotFound();
+            }
+
+            var usuarios = db.Usuarios.Select(u => new
+            {
+                IdUsuario = u.IdUsuario,
+                Nombre = u.Nombre + " " + u.Apellido
+            });
+
+            ViewBag.IdUsuario = new SelectList(usuarios, "IdUsuario", "Nombre", incidentesVM.IdUsuario);
+
+            var clientes = db.Clientes.Select(u => new
+            {
+                IdCliente = u.IdCliente,
+                Nombre = u.Nombre + " " + u.Apellido
+            });
+            ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre", incidentesVM.IdCliente);
+
+            ViewBag.IdProblema = new SelectList(db.Problemas, "IdProblema", "Nombre", incidentesVM.IdProblema);
+            ViewBag.IdProducto = new SelectList(db.Productos, "IdProducto", "Nombre", incidentesVM.IdProducto);
+            ViewBag.IdPrioridad = new SelectList(db.Prioridades.OrderByDescending(x => x.IdPrioridad), "IdPrioridad", "Nombre", incidentesVM.IdPrioridad);
+            ViewBag.IdEstado = new SelectList(db.Estados, "IdEstado", "Nombre", incidentesVM.IncidentesEstados == null ? 1 :  incidentesVM.IncidentesEstados.IdEstado);
+
+            return View(incidentesVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditarEstado([Bind(Include = "IdIncidente,IdUsuario,IdEstado,Observaciones")] IncidentesViewModel incidentesVM)
+        {
+
+            if (ModelState.IsValid)
+            {
+                IncidentesEstados incidentesEstados = new IncidentesEstados();
+                Usuarios usuario = new Usuarios();
+                incidentesEstados.IdUsuario = usuario.ObtenerId(User.Identity.Name);
+                incidentesEstados.IdIncidente = incidentesVM.IdIncidente;
+                incidentesEstados.IdEstado = incidentesVM.IdEstado;
+                incidentesEstados.FechaActualizacion = DateTime.Now;
+                incidentesEstados.Observacion = incidentesVM.Observaciones;
+                db.IncidentesEstados.Add(incidentesEstados);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            var usuarios = db.Usuarios.Select(u => new
+            {
+                IdUsuario = u.IdUsuario,
+                Nombre = u.Nombre + " " + u.Apellido
+            });
+
+            ViewBag.IdUsuario = new SelectList(usuarios, "IdUsuario", "Nombre", incidentesVM.IdUsuario);
+
+            var clientes = db.Clientes.Select(u => new
+            {
+                IdCliente = u.IdCliente,
+                Nombre = u.Nombre + " " + u.Apellido
+            });
+            ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre", incidentesVM.IdCliente);
+
+            ViewBag.IdProblema = new SelectList(db.Problemas, "IdProblema", "Nombre", incidentesVM.IdProblema);
+            ViewBag.IdProducto = new SelectList(db.Productos, "IdProducto", "Nombre", incidentesVM.IdProducto);
+            ViewBag.IdPrioridad = new SelectList(db.Prioridades.OrderByDescending(x => x.IdPrioridad), "IdPrioridad", "Nombre", incidentesVM.IdPrioridad);
+            ViewBag.IdEstado = new SelectList(db.Estados, "IdEstado", "Nombre", incidentesVM.IdEstado);
+
+            return View(incidentesVM);
+        }
+
 
         // GET: Incidentes/Delete/5
         public ActionResult Delete(int? id)

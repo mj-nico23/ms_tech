@@ -268,6 +268,7 @@
     <Content Include="Views\Incidentes\Details.cshtml" />
     <Content Include="Views\Incidentes\Edit.cshtml" />
     <Content Include="Views\Incidentes\Index.cshtml" />
+    <Content Include="Views\Incidentes\EditarEstado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
