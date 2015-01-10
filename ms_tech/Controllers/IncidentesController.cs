@@ -128,7 +128,7 @@ namespace ms_tech.Controllers
             {
                 IdCliente = u.IdCliente,
                 Nombre = u.Nombre + " " + u.Apellido
-            });
+            }).OrderBy(x => x.Nombre);
             ViewBag.IdCliente = new SelectList(clientes, "IdCliente", "Nombre", incidentesVM.IdCliente);
             ViewBag.IdProblema = new SelectList(db.Problemas, "IdProblema", "Nombre");
             ViewBag.IdProducto = new SelectList(db.Productos, "IdProducto", "Nombre");

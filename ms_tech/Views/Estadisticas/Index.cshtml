@@ -1,0 +1,89 @@
+﻿@model ms_tech.ViewModels.EstadisticasViewModel
+
+@{
+    ViewBag.Title = "Estadísticas";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (ViewBag.Error != "")
+{
+    <p>
+        @ViewBag.Error
+    </p>
+}
+else
+{
+    using (Html.BeginForm(new { action = "AbrirReporte" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-md-2">Tipo de Reporte</label>
+                <div class="col-md-10">
+                    <select class="form-control" id="TipoReporte" name="TipoReporte">
+                        <option value="1">Incidentes</option>
+                        <option value="2">Incidentes Nuevos</option>
+                        <option value="3">Incidente En Proceso</option>
+                        <option value="4">Incidente Cerrados</option>
+                        <option value="5">Clientes</option>
+                        <option value="6">Incidentes por Usuario</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Fecha Desde</label>
+                <div class="col-md-2">
+                    <input type="text" id="FechaDesde" name="FechaDesde" class="form-control datepicker" />
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Fecha Hasta</label>
+                        <div class="col-md-5">
+                            <input type="text" id="FechaHasta" name="FechaHasta" class="form-control datepicker" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Orden</label>
+                <div class="col-md-2">
+                    <select class="form-control" id="Orden" name="Orden">
+                        <option value="idincidente">Nro. Incidente</option>
+                        <option value="Estado">Estado</option>
+                        <option value="Fecha">Fecha de Incidente</option>
+                        <option value="IdPrioridad">Prioridad</option>
+                        <option value="Usuario">Usuario</option>
+                        <option value="Cliente">Cliente</option>
+                        <option value="Producto">Producto</option>
+                        <option value="Problema">Problema</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label><input type="radio" name="TipoOrden" value="ASC" checked>Asc</label>&nbsp;&nbsp;
+                    <label><input type="radio" name="TipoOrden" value="DESC">Desc</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Abrir Reporte" class="btn btn-default" style="width:150px" />
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true
+            });
+        });
+    </script>
+}

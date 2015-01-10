@@ -51,5 +51,6 @@ namespace ms_tech.Models
         public System.Data.Entity.DbSet<ms_tech.Models.Estados> Estados { get; set; }
 
         public System.Data.Entity.DbSet<ms_tech.Models.Prioridades> Prioridades { get; set; }
+       
     }
 }

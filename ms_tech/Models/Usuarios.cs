@@ -47,13 +47,24 @@ namespace ms_tech.Models
 
         public int ObtenerId(string userEmail)
         {
-             ApplicationDbContext db = new ApplicationDbContext();
+            ApplicationDbContext db = new ApplicationDbContext();
             var user = db.Usuarios.Where(a => a.Email.Equals(userEmail)).FirstOrDefault();
             if (user != null)
             {
                 return user.IdUsuario;
             }
             return 0;
-        } 
+        }
+
+        public Usuarios Obtener(string userEmail)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var user = db.Usuarios.Where(a => a.Email.Equals(userEmail)).FirstOrDefault();
+            if (user != null)
+            {
+                return user;
+            }
+            return null;
+        }
     }
 }
