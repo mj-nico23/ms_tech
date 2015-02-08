@@ -29,12 +29,12 @@ else
                         <option value="3">Incidente En Proceso</option>
                         <option value="4">Incidente Cerrados</option>
                         <option value="5">Clientes</option>
-                        <option value="6">Incidentes por Usuario</option>
+                        <option value="6">Usuarios</option>
                     </select>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="divIncidentes">
                 <label class="control-label col-md-2">Fecha Desde</label>
                 <div class="col-md-2">
                     <input type="text" id="FechaDesde" name="FechaDesde" class="form-control datepicker" />
@@ -49,19 +49,49 @@ else
                 </div>
             </div>
 
+            <div id="divClientes" style="display:none">
+                <div class="form-group">
+                    <label class="control-label col-md-2">Nombre</label>
+                    <div class="col-md-10">
+                        <input type="text" id="Nombre" name="Nombre" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Apellido</label>
+                    <div class="col-md-10">
+                        <input type="text" id="Apellido" name="Apellido" class="form-control" />
+                    </div>
+                </div>
+                <div id="divTipoCliente">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IdClienteTipo, "Tipo de Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("IdClienteTipo", null, "Todos", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IdClienteTipo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div id="divTipoUsuario">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IdUsuarioTipo, "Tipo de Usuario", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("IdUsuarioTipo", null, "Todos", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IdUsuarioTipo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Mail</label>
+                    <div class="col-md-10">
+                        <input type="text" id="Mail" name="Mail" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="control-label col-md-2">Orden</label>
                 <div class="col-md-2">
-                    <select class="form-control" id="Orden" name="Orden">
-                        <option value="idincidente">Nro. Incidente</option>
-                        <option value="Estado">Estado</option>
-                        <option value="Fecha">Fecha de Incidente</option>
-                        <option value="IdPrioridad">Prioridad</option>
-                        <option value="Usuario">Usuario</option>
-                        <option value="Cliente">Cliente</option>
-                        <option value="Producto">Producto</option>
-                        <option value="Problema">Problema</option>
-                    </select>
+                    <select class="form-control" id="Orden" name="Orden"></select>
                 </div>
                 <div class="col-md-5">
                     <label><input type="radio" name="TipoOrden" value="ASC" checked>Asc</label>&nbsp;&nbsp;
@@ -80,10 +110,88 @@ else
 @section scripts {
     <script type="text/javascript">
         $(document).ready(function () {
+            CargarComboOrdenIncidentes();
+
             $('.datepicker').datepicker({
                 format: 'dd/mm/yyyy',
                 autoclose: true
             });
+
+            $("#TipoReporte").change(function () {
+                $("#divClientes").hide();
+                $("#divIncidentes").hide();
+                $("#divTipoCliente").hide();
+                $("#divTipoUsuario").hide();
+
+                if ($("#TipoReporte").val() == "5") {
+                    CargarComboOrdenClientes();
+                    $("#divClientes").show();
+                    $("#divTipoCliente").show();
+                }
+                else if ($("#TipoReporte").val() == "6") {
+                    CargarComboOrdenUsuarios();
+                    $("#divClientes").show();
+                    $("#divTipoUsuario").show();
+                }
+                else {
+                    CargarComboOrdenIncidentes();
+                    $("#divIncidentes").show();
+                }
+            });
+
+
         });
+
+        function CargarComboOrdenIncidentes() {
+            var OptionsIncidentes = {
+                "idincidente": "Nro. Incidente",
+                "Estado": "Estado",
+                "Fecha de Incidente": "Fecha",
+                "IdPrioridad": "Prioridad",
+                "Usuario": "Usuario",
+                "Cliente": "Cliente",
+                "Producto": "Producto",
+                "Problema": "Problema"
+            };
+
+            var $el = $("#Orden");
+            $el.empty(); // remove old options
+            $.each(OptionsIncidentes, function (value, key) {
+                $el.append($("<option></option>")
+                   .attr("value", value).text(key));
+            });
+        }
+
+        function CargarComboOrdenClientes() {
+            var OptionsClientes = {
+                "Nombre": "Nombre",
+                "Apellido": "Apellido",
+                "Mail": "Mail",
+                "TipoCliente": "Tipo de Cliente"
+            };
+
+            var $el = $("#Orden");
+            $el.empty(); // remove old options
+            $.each(OptionsClientes, function (value, key) {
+                $el.append($("<option></option>")
+                   .attr("value", value).text(key));
+            });
+        }
+
+        function CargarComboOrdenUsuarios() {
+            var OptionsClientes = {
+                "Nombre": "Nombre",
+                "Apellido": "Apellido",
+                "Mail": "Mail",
+                "TipoUsuario": "Tipo de Usuario"
+            };
+
+            var $el = $("#Orden");
+            $el.empty(); // remove old options
+            $.each(OptionsClientes, function (value, key) {
+                $el.append($("<option></option>")
+                   .attr("value", value).text(key));
+            });
+        }
     </script>
 }
