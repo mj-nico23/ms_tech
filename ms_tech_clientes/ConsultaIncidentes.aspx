@@ -23,7 +23,7 @@
                         <a href="ConsultaIncidentes.aspx" class="navbar-brand">MS-Tech</a>
                     </div>
                     <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
+                        <ul class="nav navbar-nav"> 
                             <li class="nav navbar-nav navbar">
                                 <a href="ConsultaIncidentes.aspx" class="nav navbar-nav navbar">Consulta de Incidentes</a>
                             </li>
