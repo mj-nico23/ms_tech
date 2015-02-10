@@ -7,9 +7,9 @@ namespace ms_tech_clientes
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["incidente"] != null)
+            if (Request.QueryString["incidente"] != null && Request.QueryString["incidente"].ToString().Trim() != "")
             {
-                string nroIncidente = Request.QueryString["incidente"].ToString();
+                string nroIncidente = Request.QueryString["incidente"].ToString().Trim();
 
                 lblNroIncidente.Text = nroIncidente;
 
@@ -23,12 +23,14 @@ namespace ms_tech_clientes
                         lblFecha.Text = dt.Rows[0]["FechaMostrar"].ToString().Trim();
                         lblDesc.Text = dt.Rows[0]["descripcion"].ToString().Trim();
                         lblEstado.Text = dt.Rows[0]["Estado"].ToString().Trim();
+                        lblFechaAct.Text = DateTime.Parse(dt.Rows[0]["FechaActualizacion"].ToString().Trim()).ToString("dd/MM/yyyy HH:mm");
                     }
                 }
             }
             else
             {
-                throw new Exception("Error de datos...");
+                divDetalle.Visible = false;
+                divError.Visible = true;
             }
         }
     }

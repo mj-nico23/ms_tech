@@ -13,5 +13,25 @@ namespace ms_tech_clientes
         {
 
         }
+
+        protected void btnAceptar_Click(object sender, EventArgs e)
+        {
+            if (Email.Text.Trim() == "" || Password.Text == "")
+            {
+                lblMsj.Text = "Complete los datos de ingreso.";
+                return;
+            }
+
+            string msj="";
+            if (Cliente.ValidarUsuario(Email.Text, Password.Text, out msj))
+            {
+                Session["LogOn"] = msj;
+                Response.Redirect("ConsultaIncidentes.aspx");
+            }
+            else
+            {
+                lblMsj.Text = msj;
+            }
+        }
     }
 }

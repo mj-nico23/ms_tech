@@ -22,6 +22,15 @@ namespace ms_tech_clientes {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
+        /// divDetalle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divDetalle;
+        
+        /// <summary>
         /// lblNroIncidente control.
         /// </summary>
         /// <remarks>
@@ -58,15 +67,6 @@ namespace ms_tech_clientes {
         protected global::System.Web.UI.WebControls.Label lblProblema;
         
         /// <summary>
-        /// lblUsuario control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblUsuario;
-        
-        /// <summary>
         /// lblFecha control.
         /// </summary>
         /// <remarks>
@@ -85,6 +85,15 @@ namespace ms_tech_clientes {
         protected global::System.Web.UI.WebControls.Label lblDesc;
         
         /// <summary>
+        /// lblFechaAct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFechaAct;
+        
+        /// <summary>
         /// lblEstado control.
         /// </summary>
         /// <remarks>
@@ -92,5 +101,14 @@ namespace ms_tech_clientes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEstado;
+        
+        /// <summary>
+        /// divError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divError;
     }
 }

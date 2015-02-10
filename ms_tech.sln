@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ms_tech", "ms_tech\ms_tech.csproj", "{FAAF7CBA-803F-4D58-B49D-D4DE747B7943}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ms_tech_clientes", "ms_tech_clientes\ms_tech_clientes.csproj", "{E8805579-5043-4681-8E44-EC47D34C6C0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{FAAF7CBA-803F-4D58-B49D-D4DE747B7943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAAF7CBA-803F-4D58-B49D-D4DE747B7943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAAF7CBA-803F-4D58-B49D-D4DE747B7943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8805579-5043-4681-8E44-EC47D34C6C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8805579-5043-4681-8E44-EC47D34C6C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8805579-5043-4681-8E44-EC47D34C6C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8805579-5043-4681-8E44-EC47D34C6C0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
