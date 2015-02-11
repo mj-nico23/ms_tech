@@ -7,10 +7,10 @@ namespace ms_tech_clientes
 {
     public class Cliente
     {
-        public static bool ValidarUsuario(string usuario, string pass, out string msj)
+        public static bool ValidarUsuario(string usuario, string pass, out string msj, out string id)
         {
             msj = "";
-
+            id = "";
             string sql = "select * from Clientes where mail= '" + usuario + "'";
 
             using (DataTable dt = Sql1.Execute(sql))
@@ -33,6 +33,7 @@ namespace ms_tech_clientes
                     return false;
                 }
 
+                id = dt.Rows[0]["IdCliente"].ToString();
                 msj = dt.Rows[0]["Nombre"].ToString() + " " + dt.Rows[0]["Apellido"].ToString();
             }
 
@@ -52,5 +53,6 @@ namespace ms_tech_clientes
             }
             return hashString;
         }
+       
     }
 }

@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-2">Password</label>
+                                <label class="control-label col-md-2">Contraseña</label>
                                 <div class="col-md-10">
                                     <asp:TextBox ID="Password" runat="server" TextMode="Password" CssClass="form-control"></asp:TextBox>
                                 </div>

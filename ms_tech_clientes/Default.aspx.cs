@@ -22,10 +22,11 @@ namespace ms_tech_clientes
                 return;
             }
 
-            string msj="";
-            if (Cliente.ValidarUsuario(Email.Text, Password.Text, out msj))
+            string msj = "", id = ""; ;
+            if (Cliente.ValidarUsuario(Email.Text, Password.Text, out msj, out id))
             {
                 Session["LogOn"] = msj;
+                Session["Id"] = id;
                 Response.Redirect("ConsultaIncidentes.aspx");
             }
             else

@@ -38,7 +38,7 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%=Session["LogOn"].ToString() %> <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#" class="nav navbar-nav navbar">Cambiar Contraseña</a></li>
+                                         <li><a href="CambiarContrasena.aspx" class="nav navbar-nav navbar">Cambiar Contraseña</a></li>
                                         <li><a href="FinSession.aspx" class="nav navbar-nav navbar">Cerrar Sesión</a></li>
                                     </ul>
                                 </li>

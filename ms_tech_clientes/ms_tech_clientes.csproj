@@ -70,6 +70,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="CrearIncidente.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="FinSession.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -87,17 +88,25 @@
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\npm.js" />
+    <Content Include="Soporte.aspx" />
     <Content Include="Web.config" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cliente.cs" />
+    <Compile Include="Clases\Cliente.cs" />
     <Compile Include="ConsultaIncidentes.aspx.cs">
       <DependentUpon>ConsultaIncidentes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ConsultaIncidentes.aspx.designer.cs">
       <DependentUpon>ConsultaIncidentes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CrearIncidente.aspx.cs">
+      <DependentUpon>CrearIncidente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CrearIncidente.aspx.designer.cs">
+      <DependentUpon>CrearIncidente.aspx</DependentUpon>
     </Compile>
     <Compile Include="FinSession.aspx.cs">
       <DependentUpon>FinSession.aspx</DependentUpon>
@@ -106,8 +115,15 @@
     <Compile Include="FinSession.aspx.designer.cs">
       <DependentUpon>FinSession.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Sql1.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="Clases\Productos.cs" />
+    <Compile Include="Soporte.aspx.cs">
+      <DependentUpon>Soporte.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Soporte.aspx.designer.cs">
+      <DependentUpon>Soporte.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Clases\Sql1.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -125,10 +141,12 @@
     <Compile Include="Incidente.aspx.designer.cs">
       <DependentUpon>Incidente.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Incidentes1.cs" />
+    <Compile Include="Clases\Incidentes1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Code\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
