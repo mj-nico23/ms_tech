@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<ms_tech.Models.Problemas>
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Lista de Problemas";
@@ -35,9 +36,9 @@
             @Html.DisplayFor(modelItem => item.Activo)
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id = item.IdProblema }) |
-            @Html.ActionLink("Detalles", "Details", new { id = item.IdProblema }) |
-            @Html.ActionLink("Borrar", "Delete", new { id = item.IdProblema })
+            @Html.ImageActionLink("Editar", "Edit", "Problemas", new { id = item.IdProblema }, null) |
+            @Html.ImageActionLink("Detalles", "Details", "Problemas", new { id = item.IdProblema }, null) |
+            @Html.ImageActionLink("Eliminar", "Delete", "Problemas", new { id = item.IdProblema }, null)
         </td>
     </tr>
 }

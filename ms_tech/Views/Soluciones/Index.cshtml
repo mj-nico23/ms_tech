@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<ms_tech.ViewModels.SolucionesViewModel>
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Lista de Soluciones";
@@ -41,9 +42,9 @@
             @Html.DisplayFor(modelItem => item.Activo)
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id = item.IdSolucion }) |
-            @Html.ActionLink("Detalles", "Details", new { id = item.IdSolucion }) |
-            @Html.ActionLink("Borrar", "Delete", new { id = item.IdSolucion })
+            @Html.ImageActionLink("Editar", "Edit", "Soluciones", new { id = item.IdSolucion }, null) |
+            @Html.ImageActionLink("Detalles", "Details", "Soluciones", new { id = item.IdSolucion }, null) |
+            @Html.ImageActionLink("Eliminar", "Delete", "Soluciones", new { id = item.IdSolucion }, null)
         </td>
     </tr>
 }

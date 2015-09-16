@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<ms_tech.Models.Productos>
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Lista de Productos";
@@ -29,9 +30,9 @@
             @Html.DisplayFor(modelItem => item.Activo)
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.IdProducto }) |
-            @Html.ActionLink("Detalles", "Details", new { id=item.IdProducto }) |
-            @Html.ActionLink("Borrar", "Delete", new { id=item.IdProducto })
+            @Html.ImageActionLink("Editar", "Edit", "Productos", new { id = item.IdProducto }, null) |
+            @Html.ImageActionLink("Detalles", "Details", "Productos", new { id = item.IdProducto }, null) |
+            @Html.ImageActionLink("Eliminar", "Delete", "Productos", new { id = item.IdProducto }, null)
         </td>
     </tr>
 }
