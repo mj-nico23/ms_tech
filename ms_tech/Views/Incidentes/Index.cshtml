@@ -14,8 +14,8 @@
 @using (Html.BeginForm("Index", "Incidentes", FormMethod.Get))
 {
     <p>
-        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtrar" })
-        <input type="submit" value="Buscar" class="btn btn-default" />
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro" })
+        @Html.BotonBuscar()
     </p>
 }
 <table class="table">

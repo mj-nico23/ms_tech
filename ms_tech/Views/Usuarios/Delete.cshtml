@@ -1,4 +1,5 @@
 ﻿@model ms_tech.Models.Usuarios
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Borrar";
@@ -76,8 +77,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Borrar" class="btn btn-default" /> |
-            @Html.ActionLink("Volver", "Index")
+            @Html.IconButton("Volver", "Index", "Usuarios", null, null, "")
+            @Html.IconButton("Eliminar", "delete", "Usuarios", new { id = Model.IdUsuario }, null, "")
         </div>
     }
 </div>

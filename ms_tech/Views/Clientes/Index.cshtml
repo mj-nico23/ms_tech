@@ -12,15 +12,15 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-   
-    @Html.IconButton("Nuevo Cliente", "Create", "Clientes", null, null,"")
-   
+
+    @Html.IconButton("Nuevo Cliente", "Create", "Clientes", null, null, "")
+
 </p>
 @using (Html.BeginForm("Index", "Clientes", FormMethod.Get))
 {
     <p>
-        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtrar" })
-        <input type="submit" value="Buscar" class="btn btn-default" />
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro" })
+        @Html.BotonBuscar()
     </p>
 }
 <table class="table">
