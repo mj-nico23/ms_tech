@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -11,23 +12,36 @@ namespace ms_tech.Helpers
     {
         public static IHtmlString ImageActionLink(this HtmlHelper htmlHelper, string linkText, string action, string controller, object routeValues, object htmlAttributes)
         {
+            return ImageActionLink(htmlHelper, linkText, action, controller, routeValues, htmlAttributes, "");
+        }
+
+        public static IHtmlString ImageActionLink(this HtmlHelper htmlHelper, string linkText, string action, string controller, object routeValues, object htmlAttributes, string image)
+        {
             var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
             var img = new TagBuilder("img");
             img.Attributes.Add("title", linkText);
 
-            switch (linkText.ToLower())
+            if (image != "")
+                img.Attributes.Add("src", VirtualPathUtility.ToAbsolute("~/images/" + image));
+            else
             {
-                case "editar":
-                    img.Attributes.Add("src", VirtualPathUtility.ToAbsolute("~/images/edit.png"));
-                    break;
-                case "detalles":
-                    img.Attributes.Add("src", VirtualPathUtility.ToAbsolute("~/images/view.png"));
-                    break;
-                case "eliminar":
-                    img.Attributes.Add("src", VirtualPathUtility.ToAbsolute("~/images/delete.png"));
-                    break;
-                default:
-                    break;
+                switch (linkText.ToLower())
+                {
+                    case "editar":
+                        img.Attributes.Add("src", VirtualPathUtility.ToAbsolute("~/images/edit.png"));
+                        break;
+                    case "detalles":
+                        img.Attributes.Add("src", VirtualPathUtility.ToAbsolute("~/images/view.png"));
+                        break;
+                    case "eliminar":
+                        img.Attributes.Add("src", VirtualPathUtility.ToAbsolute("~/images/delete.png"));
+                        break;
+                    case "nuevo":
+                        img.Attributes.Add("src", VirtualPathUtility.ToAbsolute("~/images/add.png"));
+                        break;
+                    default:
+                        break;
+                }
             }
 
             var anchor = new TagBuilder("a") { InnerHtml = img.ToString(TagRenderMode.SelfClosing) };
@@ -35,7 +49,59 @@ namespace ms_tech.Helpers
             anchor.MergeAttributes(new RouteValueDictionary(htmlAttributes));
 
             return MvcHtmlString.Create(anchor.ToString());
+        }
 
+        public static IHtmlString IconButton(this HtmlHelper htmlHelper, string linkText, string action, string controller, object routeValues, object htmlAttributes)
+        {
+            return IconButton(htmlHelper, linkText, action, controller, routeValues, htmlAttributes, "");
+        }
+
+        public static IHtmlString IconButton(this HtmlHelper htmlHelper, string linkText, string action, string controller, object routeValues, object htmlAttributes, string glyphicono)
+        {
+            var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
+
+            var span = new TagBuilder("span");
+            span.SetInnerText(" " + linkText);
+
+            var icon = new TagBuilder("i");
+
+            if (glyphicono != "")
+                icon.Attributes.Add("class", "glyphicon glyphicon-" + glyphicono);
+            else
+            {
+                switch (linkText.ToLower().Substring(0, 4))
+                {
+                    case "edit":
+                        icon.Attributes.Add("class", "glyphicon glyphicon-pencil");
+                        break;
+                    case "deta":
+                        icon.Attributes.Add("class", "glyphicon glyphicon-open-file");
+                        break;
+                    case "elim":
+                        icon.Attributes.Add("class", "glyphicon glyphicon-remove");
+                        break;
+                    case "nuev":
+                        icon.Attributes.Add("class", "glyphicon glyphicon-plus");
+                        break;
+                    case "volv":
+                        icon.Attributes.Add("class", "glyphicon glyphicon-arrow-left");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            StringBuilder innerHtml = new StringBuilder();
+            innerHtml.Append(icon.ToString(TagRenderMode.Normal));
+            innerHtml.Append(span.ToString(TagRenderMode.Normal));
+
+            TagBuilder parent = new TagBuilder("a");
+            parent.InnerHtml = innerHtml.ToString();
+            parent.Attributes.Add("class", "btn btn-default");
+            parent.Attributes["href"] = urlHelper.Action(action, controller, routeValues);
+            parent.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+
+            return MvcHtmlString.Create(parent.ToString());
         }
     }
 }

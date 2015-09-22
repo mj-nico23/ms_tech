@@ -1,4 +1,5 @@
 ﻿@model ms_tech.ViewModels.IncidentesViewModel
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Editar";
@@ -89,7 +90,7 @@
 }
 
 <div>
-    @Html.ActionLink("Volver", "Index")
+    @Html.IconButton("Volver", "Index", "Incidentes", null, null, "")
 </div>
 
 @section scripts {

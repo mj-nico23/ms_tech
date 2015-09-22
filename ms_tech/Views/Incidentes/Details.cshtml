@@ -1,4 +1,5 @@
 ﻿@model ms_tech.ViewModels.IncidentesViewModel
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Detalle Incidente";
@@ -103,6 +104,6 @@
 
 </div>
 <p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.IdIncidente }) |
-    @Html.ActionLink("Volver", "Index")
+    @Html.IconButton("Volver", "Index", "Incidentes", null, null, "")
+    @Html.IconButton("Editar", "Edit", "Incidentes", new { id = Model.IdIncidente }, null)
 </p>

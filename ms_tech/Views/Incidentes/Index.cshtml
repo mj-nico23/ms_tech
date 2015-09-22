@@ -1,5 +1,7 @@
 ﻿@model PagedList.IPagedList<ms_tech.ViewModels.IncidentesViewModel>
 @using PagedList.Mvc;
+@using ms_tech.Helpers;
+
 @{
     ViewBag.Title = "Lista de Incidentes";
 }
@@ -7,12 +9,12 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Nuevo Incidente", "Create")
+    @Html.IconButton("Nuevo Incidente", "Create", "Incidentes", null, null, "")
 </p>
 @using (Html.BeginForm("Index", "Incidentes", FormMethod.Get))
 {
     <p>
-        <span style="font-weight: bold" class="control-label">&nbsp;&nbsp;Filtro:&nbsp;</span> @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block" })
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtrar" })
         <input type="submit" value="Buscar" class="btn btn-default" />
     </p>
 }
@@ -88,9 +90,10 @@
                 @Html.DisplayFor(modelItem => item.Estados.Nombre)
             </td>
             <td>
-                @Html.ActionLink("Editar Estado", "EditarEstado", new { id = item.IdIncidente }) |
-                @Html.ActionLink("Editar", "Edit", new { id = item.IdIncidente }) |
-                @Html.ActionLink("Detalles", "Details", new { id = item.IdIncidente })
+                @Html.ImageActionLink("Editar Estado", "EditarEstado", "Incidentes", new { id = item.IdIncidente }, null, "estado.png") |
+                @Html.ImageActionLink("Editar", "Edit", "Incidentes", new { id = item.IdIncidente }, null) |
+                @Html.ImageActionLink("Detalles", "Details", "Incidentes", new { id = item.IdIncidente }, null) 
+            
                
             </td>
         </tr>

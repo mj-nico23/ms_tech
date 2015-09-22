@@ -1,4 +1,5 @@
 ﻿@model ms_tech.Models.Clientes
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Nuevo Cliente";
@@ -81,7 +82,7 @@
 }
 
 <div>
-    @Html.ActionLink("Volver", "Index")
+    @Html.IconButton("Volver", "Index", "Clientes", null, null, "")
 </div>
 
 @section Scripts {
