@@ -1,6 +1,5 @@
-﻿@model IEnumerable<ms_tech.ViewModels.IncidentesViewModel>
-@using ms_tech.Helpers;
-
+﻿@model PagedList.IPagedList<ms_tech.ViewModels.IncidentesViewModel>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Lista de Incidentes";
 }
@@ -10,30 +9,37 @@
 <p>
     @Html.ActionLink("Nuevo Incidente", "Create")
 </p>
+@using (Html.BeginForm("Index", "Incidentes", FormMethod.Get))
+{
+    <p>
+        <span style="font-weight: bold" class="control-label">&nbsp;&nbsp;Filtro:&nbsp;</span> @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block" })
+        <input type="submit" value="Buscar" class="btn btn-default" />
+    </p>
+}
 <table class="table">
     <tr>
         <th>
-            Cliente
+            @Html.ActionLink("Cliente", "Index", new { sortOrder = ViewBag.Cliente, currentFilter = ViewBag.CurrentFilter })
         </th>
 
         <th>
-            Usuario
+            @Html.ActionLink("Usuario", "Index", new { sortOrder = ViewBag.Usuario, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Producto
+            @Html.ActionLink("Producto", "Index", new { sortOrder = ViewBag.Producto, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Problema
+            @Html.ActionLink("Problema", "Index", new { sortOrder = ViewBag.Problema, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Fecha)
+            @Html.ActionLink("Fecha", "Index", new { sortOrder = ViewBag.Fecha, currentFilter = ViewBag.CurrentFilter })
         </th>
       
         <th>
-            Prioridad
+            @Html.ActionLink("Prioridad", "Index", new { sortOrder = ViewBag.Prioridad, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            Estado
+            @Html.ActionLink("Estado", "Index", new { sortOrder = ViewBag.Estado, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>
@@ -83,10 +89,20 @@
             </td>
             <td>
                 @Html.ActionLink("Editar Estado", "EditarEstado", new { id = item.IdIncidente }) |
-                @Html.ImageActionLink("Editar", "Edit", "Incidentes", new { id = item.IdIncidente }, null) |
-                @Html.ImageActionLink("Detalles", "Details", "Incidentes", new { id = item.IdIncidente }, null)
+                @Html.ActionLink("Editar", "Edit", new { id = item.IdIncidente }) |
+                @Html.ActionLink("Detalles", "Details", new { id = item.IdIncidente })
+               
             </td>
         </tr>
     }
 
 </table>
+<br />
+@{
+    if (Model.PageCount > 1)
+    {
+        <text>Página</text> @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) <text>de</text> @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    }
+}
