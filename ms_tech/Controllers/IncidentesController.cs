@@ -9,6 +9,7 @@ using iTextSharp.text.pdf;
 using ms_tech.Models;
 using ms_tech.ViewModels;
 using ms_tech.Clases;
+using PagedList;
 
 namespace ms_tech.Controllers
 {
@@ -17,14 +18,32 @@ namespace ms_tech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Incidentes
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             if (!Request.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Usuarios", new { r = "/Incidentes/Index/" });
             }
 
-            //var incidentes = db.Incidentes.Include(i => i.Clientes).Include(i => i.Problemas).Include(i => i.Usuarios);
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.Cliente = sortOrder == "cliente" ? "cliente_desc" : "cliente";
+            ViewBag.Usuario = sortOrder == "usuario" ? "usuario_desc" : "usuario";
+            ViewBag.Producto = sortOrder == "producto" ? "producto_desc" : "producto";
+            ViewBag.Problema = sortOrder == "problema" ? "problema_desc" : "problema";
+            ViewBag.Fecha = sortOrder == "fecha" ? "fecha_desc" : "fecha";
+            ViewBag.Prioridad = sortOrder == "prioriodad" ? "prioriodad_desc" : "prioriodad";
+            ViewBag.Estado = sortOrder == "estado" ? "estado_desc" : "estado";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
 
             var incidentesVM = (from s in db.Incidentes
                                 join p in db.Problemas on s.IdProblema equals p.IdProblema
@@ -61,8 +80,69 @@ namespace ms_tech.Controllers
                                     Estados = e.FirstOrDefault()
                                 });
 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                incidentesVM = incidentesVM.Where(s => s.NombreUsuario.Contains(searchString) || s.Clientes.Apellido.Contains(searchString) || s.Clientes.Nombre.Contains(searchString)
+                || s.Usuarios.Apellido.Contains(searchString) || s.Usuarios.Nombre.Contains(searchString) || s.Productos.Nombre.Contains(searchString) || s.Problemas.Nombre.Contains(searchString)
+                || s.Estados.Nombre.Contains(searchString));
+            }
 
-            return View(incidentesVM.ToList());
+            switch (sortOrder)
+            {
+                case "cliente":
+                    incidentesVM = incidentesVM.OrderBy(c => c.Clientes.Nombre);
+                    break;
+                case "cliente_desc":
+                    incidentesVM = incidentesVM.OrderByDescending(c => c.Clientes.Nombre);
+                    break;
+                case "usuario":
+                    incidentesVM = incidentesVM.OrderBy(c => c.Usuarios.Nombre);
+                    break;
+                case "usuario_desc":
+                    incidentesVM = incidentesVM.OrderByDescending(c => c.Usuarios.Nombre);
+                    break;
+                case "producto":
+                    incidentesVM = incidentesVM.OrderBy(c => c.Productos.Nombre);
+                    break;
+                case "producto_desc":
+                    incidentesVM = incidentesVM.OrderByDescending(c => c.Productos.Nombre);
+                    break;
+                case "problema":
+                    incidentesVM = incidentesVM.OrderBy(c => c.Productos.Nombre);
+                    break;
+                case "problema_desc":
+                    incidentesVM = incidentesVM.OrderByDescending(c => c.Problemas.Nombre);
+                    break;
+                case "fecha":
+                    incidentesVM = incidentesVM.OrderBy(c => c.Productos.Nombre);
+                    break;
+                case "fecha_desc":
+                    incidentesVM = incidentesVM.OrderByDescending(c => c.Fecha);
+                    break;
+                case "prioriodad":
+                    incidentesVM = incidentesVM.OrderBy(c => c.Prioridades.Nombre);
+                    break;
+                case "prioriodad_desc":
+                    incidentesVM = incidentesVM.OrderByDescending(c => c.Prioridades.Nombre);
+                    break;
+                case "estado":
+                    incidentesVM = incidentesVM.OrderBy(c => c.Estados.Nombre);
+                    break;
+                case "estado_desc":
+                    incidentesVM = incidentesVM.OrderByDescending(c => c.Estados.Nombre);
+                    break;
+                default:
+                    incidentesVM = incidentesVM.OrderByDescending(c => c.Fecha);
+                    break;
+            }
+
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            //return View(students.ToPagedList(pageNumber, pageSize));
+
+            return View(incidentesVM.ToPagedList(pageNumber, pageSize));
+            //return View(incidentesVM.ToList());
         }
 
         // GET: Incidentes/Details/5
@@ -351,7 +431,7 @@ namespace ms_tech.Controllers
             ViewBag.IdProblema = new SelectList(db.Problemas, "IdProblema", "Nombre", incidentesVM.IdProblema);
             ViewBag.IdProducto = new SelectList(db.Productos, "IdProducto", "Nombre", incidentesVM.IdProducto);
             ViewBag.IdPrioridad = new SelectList(db.Prioridades.OrderByDescending(x => x.IdPrioridad), "IdPrioridad", "Nombre", incidentesVM.IdPrioridad);
-            ViewBag.IdEstado = new SelectList(db.Estados, "IdEstado", "Nombre", incidentesVM.IncidentesEstados == null ? 1 :  incidentesVM.IncidentesEstados.IdEstado);
+            ViewBag.IdEstado = new SelectList(db.Estados, "IdEstado", "Nombre", incidentesVM.IncidentesEstados == null ? 1 : incidentesVM.IncidentesEstados.IdEstado);
 
             return View(incidentesVM);
         }
