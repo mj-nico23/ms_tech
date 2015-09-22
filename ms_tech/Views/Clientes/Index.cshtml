@@ -1,5 +1,8 @@
 ﻿@model PagedList.IPagedList<ms_tech.Models.Clientes>
 @using PagedList.Mvc;
+@using ms_tech.Helpers;
+
+
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
@@ -77,9 +80,9 @@
             </td>
 
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.IdCliente }) |
-                @Html.ActionLink("Detalle", "Details", new { id = item.IdCliente }) |
-                @Html.ActionLink("Borrar", "Delete", new { id = item.IdCliente })
+                @Html.ImageActionLink("Editar", "Edit", "Clientes", new { id = item.IdCliente }, null) |
+                @Html.ImageActionLink("Detalles", "Details", "Clientes", new { id = item.IdCliente }, null) |
+                @Html.ImageActionLink("Eliminar", "Delete", "Clientes", new { id = item.IdCliente }, null)
             </td>
         </tr>
     }
