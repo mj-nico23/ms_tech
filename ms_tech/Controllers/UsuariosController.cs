@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using ms_tech.Models;
 using ms_tech.ViewModels;
+using PagedList;
 
 namespace ms_tech.Controllers
 {
@@ -17,19 +18,81 @@ namespace ms_tech.Controllers
 
         public ActionResult Start()
         {
-            
+
             return View();
         }
 
         // GET: Usuarios
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             if (!Request.IsAuthenticated)
             {
                 return RedirectToAction("Login", new { r = "/Usuarios/Index" });
             }
+
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.TipoSortParm = sortOrder == "tipo" ? "tipo_desc" : "tipo";
+            ViewBag.NombreSortParm = sortOrder == "nombre" ? "nombre_desc" : "nombre";
+            ViewBag.ApellidoSortParm = sortOrder == "apellido" ? "apellido_desc" : "apellido";
+            ViewBag.EmailSortParm = sortOrder == "email" ? "email_desc" : "email";
+            ViewBag.ActivoSortParm = sortOrder == "activo" ? "activo_desc" : "activo";
+
+            if (searchString != null)
+                page = 1;
+            else
+                searchString = currentFilter;
+
+            ViewBag.CurrentFilter = searchString;
+
             var usuarios = db.Usuarios.Include(u => u.UsuariosTipos);
-            return View(usuarios.ToList());
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                usuarios = usuarios.Where(s => s.Nombre.Contains(searchString) || s.Apellido.Contains(searchString) || s.Email.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "tipo":
+                    usuarios = usuarios.OrderBy(c => c.UsuariosTipos.Nombre);
+                    break;
+                case "tipo_desc":
+                    usuarios = usuarios.OrderByDescending(c => c.UsuariosTipos.Nombre);
+                    break;
+                case "nombre":
+                    usuarios = usuarios.OrderBy(c => c.Nombre);
+                    break;
+                case "nombre_desc":
+                    usuarios = usuarios.OrderByDescending(c => c.Nombre);
+                    break;
+                case "apellido":
+                    usuarios = usuarios.OrderBy(c => c.Apellido);
+                    break;
+                case "apellido_desc":
+                    usuarios = usuarios.OrderByDescending(c => c.Apellido);
+                    break;
+                case "email":
+                    usuarios = usuarios.OrderBy(c => c.Email);
+                    break;
+                case "email_desc":
+                    usuarios = usuarios.OrderByDescending(c => c.Email);
+                    break;
+                case "activo":
+                    usuarios = usuarios.OrderByDescending(c => c.Activo);
+                    break;
+                case "activo_desc":
+                    usuarios = usuarios.OrderBy(c => c.Activo);
+                    break;
+                default:
+                    usuarios = usuarios.OrderBy(c => c.Apellido);
+                    break;
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+
+            return View(usuarios.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Usuarios/Details/5
@@ -276,7 +339,7 @@ namespace ms_tech.Controllers
             return RedirectToAction("Start", "Usuarios");
         }
 
-       
+
         #endregion
     }
 }

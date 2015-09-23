@@ -34,13 +34,9 @@ namespace ms_tech.Controllers
 
 
             if (searchString != null)
-            {
                 page = 1;
-            }
             else
-            {
                 searchString = currentFilter;
-            }
 
             ViewBag.CurrentFilter = searchString;
 
