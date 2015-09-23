@@ -9,16 +9,15 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.IconButton("Nuevo Problema", "Create", "Problemas", null, null, "")
-</p>
-
-@using (Html.BeginForm("Index", "Problemas", FormMethod.Get))
-{
-    <p>
+    @using (Html.BeginForm("Index", "Problemas", FormMethod.Get))
+    {
+        @Html.IconButton("Nuevo Problema", "Create", "Problemas", null, null, "")
+        <text> </text>
         @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro", @autocomplete = "off" })
+        <text> </text>
         @Html.BotonBuscar()
-    </p>
-}
+    }
+</p>
 
 <table class="table">
     <tr>
@@ -34,24 +33,25 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Productos.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @(item.Activo ? "Si" : "No")
-        </td>
-        <td>
-            @Html.ImageActionLink("Editar", "Edit", "Problemas", new { id = item.IdProblema }, null) |
-            @Html.ImageActionLink("Detalles", "Details", "Problemas", new { id = item.IdProblema }, null) |
-            @Html.ImageActionLink("Eliminar", "Delete", "Problemas", new { id = item.IdProblema }, null)
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Productos.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @(item.Activo ? "Si" : "No")
+            </td>
+            <td>
+                @Html.ImageActionLink("Editar", "Edit", "Problemas", new { id = item.IdProblema }, null) |
+                @Html.ImageActionLink("Detalles", "Details", "Problemas", new { id = item.IdProblema }, null) |
+                @Html.ImageActionLink("Eliminar", "Delete", "Problemas", new { id = item.IdProblema }, null)
+            </td>
+        </tr>
+    }
 </table>
 @{
     if (Model.PageCount > 1)

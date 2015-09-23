@@ -9,16 +9,16 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.IconButton("Nueva Solución", "Create", "Soluciones", null, null, "")
+    @using (Html.BeginForm("Index", "Soluciones", FormMethod.Get))
+    {
+        @Html.IconButton("Nueva Solución", "Create", "Soluciones", null, null, "")
+        <text> </text>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro", @autocomplete = "off" })
+        <text> </text>
+        @Html.BotonBuscar()
+    }
 </p>
 
-@using (Html.BeginForm("Index", "Soluciones", FormMethod.Get))
-{
-    <p>
-        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro", @autocomplete = "off" })
-        @Html.BotonBuscar()
-    </p>
-}
 <table class="table">
     <tr>
         <th>

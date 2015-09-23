@@ -9,16 +9,16 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.IconButton("Nuevo Producto", "Create", "Productos", null, null, "")
+    @using (Html.BeginForm("Index", "Productos", FormMethod.Get))
+    {
+        @Html.IconButton("Nuevo Producto", "Create", "Productos", null, null, "")
+        <text> </text>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro", @autocomplete = "off" })
+        <text> </text>
+        @Html.BotonBuscar()
+    }
 </p>
 
-@using (Html.BeginForm("Index", "Productos", FormMethod.Get))
-{
-    <p>
-        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro", @autocomplete = "off" })
-        @Html.BotonBuscar()
-    </p>
-}
 <table class="table">
     <tr>
         <th>
@@ -30,21 +30,22 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @(item.Activo ? "Si" : "No")
-        </td>
-        <td>
-            @Html.ImageActionLink("Editar", "Edit", "Productos", new { id = item.IdProducto }, null) |
-            @Html.ImageActionLink("Detalles", "Details", "Productos", new { id = item.IdProducto }, null) |
-            @Html.ImageActionLink("Eliminar", "Delete", "Productos", new { id = item.IdProducto }, null)
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @(item.Activo ? "Si" : "No")
+            </td>
+            <td>
+                @Html.ImageActionLink("Editar", "Edit", "Productos", new { id = item.IdProducto }, null) |
+                @Html.ImageActionLink("Detalles", "Details", "Productos", new { id = item.IdProducto }, null) |
+                @Html.ImageActionLink("Eliminar", "Delete", "Productos", new { id = item.IdProducto }, null)
+            </td>
+        </tr>
+    }
 </table>
 @{
     if (Model.PageCount > 1)
