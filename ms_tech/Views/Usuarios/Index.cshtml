@@ -14,7 +14,7 @@
 @using (Html.BeginForm("Index", "Usuarios", FormMethod.Get))
 {
     <p>
-        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro" })
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro", @autocomplete = "off" })
         @Html.BotonBuscar()
     </p>
 }
@@ -44,25 +44,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.UsuariosTipos.Nombre)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
+            <td title="@(item.Email.Length>30 ? item.Email: "")">
+                @(item.Email.Length > 30 ? item.Email.Substring(0, 30) + "..." : item.Email)
+            </td>
+            <td title="@(item.Nombre.Length>30 ? item.Nombre: "")">
+                @(item.Nombre.Length > 30 ? item.Nombre.Substring(0, 30) + "..." : item.Nombre)
+            </td>
+            <td title="@(item.Apellido.Length>30 ? item.Apellido: "")">
+                @(item.Apellido.Length > 30 ? item.Apellido.Substring(0, 30) + "..." : item.Apellido)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apellido)
-            </td>
-            <td>
-                @if (item.Activo)
-                {
-                    <text>Si</text>
-                }
-                else
-                {
-                    <text>No</text>
-                }
-                @*Html.DisplayFor(modelItem => item.Activo)*@
+                @(item.Activo ? "Si" : "No")
             </td>
             <td>
                 @Html.ImageActionLink("Editar", "Edit", "Usuarios", new { id = item.IdUsuario }, null) |

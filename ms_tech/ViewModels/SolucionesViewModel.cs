@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ms_tech.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using ms_tech.Models;
 
 namespace ms_tech.ViewModels
 {

@@ -1,4 +1,5 @@
 ﻿@model ms_tech.Models.Productos
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Nuevo Producto";
@@ -33,12 +34,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Crear Producto" class="btn btn-default" />
+                @Html.BotonGuardar("Crear Producto")
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Volver", "Index")
+    @Html.IconButton("Volver", "Index", "Productos", null, null, "")
 </div>

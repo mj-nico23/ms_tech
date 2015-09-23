@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using ms_tech.Models;
 using ms_tech.ViewModels;
+using PagedList;
 
 namespace ms_tech.Controllers
 {
@@ -16,37 +17,106 @@ namespace ms_tech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Soluciones
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             if (!Request.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Usuarios", new { r = "/Soluciones/Index" });
             }
 
-           
 
-            IEnumerable<SolucionesViewModel> model = (from s in db.Soluciones
-                                                      join p in db.Problemas on s.IdProblema equals p.IdProblema
-                                                      join p1 in db.Productos on p.IdProducto equals p1.IdProducto
-                                                      select new SolucionesViewModel
-                                                      {
-                                                          IdSolucion = s.IdSolucion,
-                                                          IdProblema = s.IdProblema,
-                                                          IdProducto = p.IdProducto,
-                                                          Descripcion = s.Descripcion,
-                                                          Activo = s.Activo,
-                                                          FechaCreacion = s.FechaCreacion,
-                                                          FechaModificacion = s.FechaModificacion,
-                                                          Problemas = p,
-                                                          Productos = p1
-                                                      });
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.ProductoSortParm = sortOrder == "producto" ? "producto_desc" : "producto";
+            ViewBag.ProblemaSortParm = sortOrder == "problema" ? "problema_desc" : "problema";
+            ViewBag.NombreSortParm = sortOrder == "nombre" ? "nombre_desc" : "nombre";
+            ViewBag.ActivoSortParm = sortOrder == "activo" ? "activo_desc" : "activo";
 
-            if (model == null)
+            if (searchString != null)
+                page = 1;
+            else
+                searchString = currentFilter;
+
+            ViewBag.CurrentFilter = searchString;
+            IEnumerable<SolucionesViewModel> soluciones;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                soluciones = (from s in db.Soluciones
+                              join p in db.Problemas on s.IdProblema equals p.IdProblema
+                              join p1 in db.Productos on p.IdProducto equals p1.IdProducto
+                              where s.Descripcion.Contains(searchString) || p.Nombre.Contains(searchString) || p1.Nombre.Contains(searchString)
+                              select new SolucionesViewModel
+                              {
+                                  IdSolucion = s.IdSolucion,
+                                  IdProblema = s.IdProblema,
+                                  IdProducto = p.IdProducto,
+                                  Descripcion = s.Descripcion,
+                                  Activo = s.Activo,
+                                  FechaCreacion = s.FechaCreacion,
+                                  FechaModificacion = s.FechaModificacion,
+                                  Problemas = p,
+                                  Productos = p1
+                              });
+            }
+            else
+            {
+                soluciones = (from s in db.Soluciones
+                              join p in db.Problemas on s.IdProblema equals p.IdProblema
+                              join p1 in db.Productos on p.IdProducto equals p1.IdProducto
+                              select new SolucionesViewModel
+                              {
+                                  IdSolucion = s.IdSolucion,
+                                  IdProblema = s.IdProblema,
+                                  IdProducto = p.IdProducto,
+                                  Descripcion = s.Descripcion,
+                                  Activo = s.Activo,
+                                  FechaCreacion = s.FechaCreacion,
+                                  FechaModificacion = s.FechaModificacion,
+                                  Problemas = p,
+                                  Productos = p1
+                              });
+            }
+
+            if (soluciones == null)
             {
                 return HttpNotFound();
             }
 
-            return View(model.ToList());
+            switch (sortOrder)
+            {
+                case "producto":
+                    soluciones = soluciones.OrderBy(c => c.Productos.Nombre);
+                    break;
+                case "producto_desc":
+                    soluciones = soluciones.OrderByDescending(c => c.Productos.Nombre);
+                    break;
+                case "problema":
+                    soluciones = soluciones.OrderBy(c => c.Problemas.Nombre);
+                    break;
+                case "problema_desc":
+                    soluciones = soluciones.OrderByDescending(c => c.Problemas.Nombre);
+                    break;
+                case "nombre":
+                    soluciones = soluciones.OrderBy(c => c.Descripcion);
+                    break;
+                case "nombre_desc":
+                    soluciones = soluciones.OrderByDescending(c => c.Descripcion);
+                    break;
+                case "activo":
+                    soluciones = soluciones.OrderByDescending(c => c.Activo);
+                    break;
+                case "activo_desc":
+                    soluciones = soluciones.OrderBy(c => c.Activo);
+                    break;
+                default:
+                    soluciones = soluciones.OrderBy(c => c.Descripcion);
+                    break;
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            return View(soluciones.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Soluciones/Details/5
@@ -204,21 +274,21 @@ namespace ms_tech.Controllers
 
 
             SolucionesViewModel soluciones = (from s in db.Soluciones
-                                                join p in db.Problemas on s.IdProblema equals p.IdProblema
-                                                join p1 in db.Productos on p.IdProducto equals p1.IdProducto
-                                                where s.IdSolucion == id
-                                                select new SolucionesViewModel
-                                                {
-                                                    IdSolucion = s.IdSolucion,
-                                                    IdProblema = s.IdProblema,
-                                                    IdProducto = p.IdProducto,
-                                                    Descripcion = s.Descripcion,
-                                                    Activo = s.Activo,
-                                                    FechaCreacion = s.FechaCreacion,
-                                                    FechaModificacion = s.FechaModificacion,
-                                                    Problemas = p,
-                                                    Productos = p1
-                                                }).FirstOrDefault();
+                                              join p in db.Problemas on s.IdProblema equals p.IdProblema
+                                              join p1 in db.Productos on p.IdProducto equals p1.IdProducto
+                                              where s.IdSolucion == id
+                                              select new SolucionesViewModel
+                                              {
+                                                  IdSolucion = s.IdSolucion,
+                                                  IdProblema = s.IdProblema,
+                                                  IdProducto = p.IdProducto,
+                                                  Descripcion = s.Descripcion,
+                                                  Activo = s.Activo,
+                                                  FechaCreacion = s.FechaCreacion,
+                                                  FechaModificacion = s.FechaModificacion,
+                                                  Problemas = p,
+                                                  Productos = p1
+                                              }).FirstOrDefault();
 
             if (soluciones == null)
             {

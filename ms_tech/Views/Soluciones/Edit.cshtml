@@ -1,4 +1,5 @@
 ﻿@model ms_tech.ViewModels.SolucionesViewModel
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Editar";
@@ -52,15 +53,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar" class="btn btn-default" />
+                @Html.BotonGuardar()
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Volver", "Index")
-</div>
+   @Html.IconButton("Volver", "Index", "Soluciones", null, null, "")
 
 @section scripts {
     <script type="text/javascript">

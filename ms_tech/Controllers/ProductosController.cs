@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ms_tech.Models;
+using PagedList;
 
 namespace ms_tech.Controllers
 {
@@ -15,14 +16,54 @@ namespace ms_tech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Productos
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             if (!Request.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Usuarios", new { r = "/Productos/Index" });
             }
 
-            return View(db.Productos.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NombreSortParm = sortOrder == "nombre" ? "nombre_desc" : "nombre";
+            ViewBag.ActivoSortParm = sortOrder == "activo" ? "activo_desc" : "activo";
+
+            if (searchString != null)
+                page = 1;
+            else
+                searchString = currentFilter;
+
+            ViewBag.CurrentFilter = searchString;
+
+            var productos = db.Productos.Where(s => 1 == 1);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                productos = productos.Where(s => s.Nombre.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "nombre":
+                    productos = productos.OrderBy(c => c.Nombre);
+                    break;
+                case "nombre_desc":
+                    productos = productos.OrderByDescending(c => c.Nombre);
+                    break;
+                case "activo":
+                    productos = productos.OrderByDescending(c => c.Activo);
+                    break;
+                case "activo_desc":
+                    productos = productos.OrderBy(c => c.Activo);
+                    break;
+                default:
+                    productos = productos.OrderBy(c => c.Nombre);
+                    break;
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            return View(productos.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Productos/Details/5

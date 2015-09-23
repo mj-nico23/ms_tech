@@ -1,4 +1,5 @@
 ﻿@model ms_tech.ViewModels.SolucionesViewModel
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Nueva Solución";
@@ -52,14 +53,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Crear Solución" class="btn btn-default" />
+                @Html.BotonGuardar("Crear Solución")
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Volver", "Index")
+    @Html.IconButton("Volver", "Index", "Soluciones", null, null, "")
 </div>
 
 @section scripts {

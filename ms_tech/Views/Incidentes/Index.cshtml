@@ -14,7 +14,7 @@
 @using (Html.BeginForm("Index", "Incidentes", FormMethod.Get))
 {
     <p>
-        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro" })
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro", @autocomplete = "off" })
         @Html.BotonBuscar()
     </p>
 }
@@ -36,7 +36,7 @@
         <th>
             @Html.ActionLink("Fecha", "Index", new { sortOrder = ViewBag.Fecha, currentFilter = ViewBag.CurrentFilter })
         </th>
-      
+
         <th>
             @Html.ActionLink("Prioridad", "Index", new { sortOrder = ViewBag.Prioridad, currentFilter = ViewBag.CurrentFilter })
         </th>
@@ -48,15 +48,14 @@
 
     @foreach (var item in Model)
     {
+        string cliente = item.Clientes.Nombre + " " + item.Clientes.Apellido;
+        string usuario = item.Usuarios.Nombre + " " + item.Usuarios.Apellido;
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Clientes.Nombre)
-                @Html.DisplayFor(modelItem => item.Clientes.Apellido)
+            <td title="@(cliente.Length>30 ? cliente: "")">
+                @(cliente.Length > 30 ? cliente.Substring(0, 30) + "..." : cliente)
             </td>
-
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuarios.Nombre)
-                @Html.DisplayFor(modelItem => item.Usuarios.Apellido)
+            <td title="@(usuario.Length>30 ? usuario: "")">
+                @(usuario.Length > 30 ? usuario.Substring(0, 30) + "..." : usuario)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Productos.Nombre)
@@ -67,23 +66,23 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Fecha)
             </td>
-            
+
             <td>
                 @{
-        switch (item.IdPrioridad)
-        {
-            case 1:
-                <text>Baja</text>;
-                break;
-            case 2:
-            <text>Media</text>;
-            break;
-            case 3:
-            <text>Alta</text>;
-            break;
-            default:
-            break;
-        }
+                    switch (item.IdPrioridad)
+                    {
+                        case 1:
+                            <text>Baja</text>;
+                            break;
+                        case 2:
+                            <text>Media</text>;
+                            break;
+                        case 3:
+                            <text>Alta</text>;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             </td>
             <td>
@@ -92,12 +91,12 @@
             <td>
                 @Html.ImageActionLink("Editar Estado", "EditarEstado", "Incidentes", new { id = item.IdIncidente }, null, "estado.png") |
                 @Html.ImageActionLink("Editar", "Edit", "Incidentes", new { id = item.IdIncidente }, null) |
-                @Html.ImageActionLink("Detalles", "Details", "Incidentes", new { id = item.IdIncidente }, null) 
-            
-               
+                @Html.ImageActionLink("Detalles", "Details", "Incidentes", new { id = item.IdIncidente }, null)
+
+
             </td>
         </tr>
-    }
+                    }
 
 </table>
 <br />

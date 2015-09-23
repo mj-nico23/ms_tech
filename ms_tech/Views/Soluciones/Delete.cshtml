@@ -1,4 +1,5 @@
 ﻿@model ms_tech.ViewModels.SolucionesViewModel
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Borrar";
@@ -67,8 +68,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Borrar" class="btn btn-default" /> |
-            @Html.ActionLink("Volver", "Index")
+            @Html.IconButton("Volver", "Index", "Soluciones", null, null, "")
+            @Html.BotonEliminar()
         </div>
     }
 </div>

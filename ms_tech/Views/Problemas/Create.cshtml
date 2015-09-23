@@ -1,4 +1,5 @@
 ﻿@model ms_tech.Models.Problemas
+@using ms_tech.Helpers;
 
 @{
     ViewBag.Title = "Nuevo Problema";
@@ -41,12 +42,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Crear Problema" class="btn btn-default" />
+                @Html.BotonGuardar("Crear Problema")
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Volver", "Index")
+    @Html.IconButton("Volver", "Index", "Problemas", null, null, "")
 </div>

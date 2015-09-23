@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ms_tech.Models.Problemas>
+﻿@model PagedList.IPagedList<ms_tech.Models.Problemas>
+@using PagedList.Mvc;
 @using ms_tech.Helpers;
 
 @{
@@ -8,18 +9,27 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Nuevo Problema", "Create")
+    @Html.IconButton("Nuevo Problema", "Create", "Problemas", null, null, "")
 </p>
+
+@using (Html.BeginForm("Index", "Problemas", FormMethod.Get))
+{
+    <p>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "display:inline-block", @placeholder = "Filtro", @autocomplete = "off" })
+        @Html.BotonBuscar()
+    </p>
+}
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Productos.Nombre)
+            @Html.ActionLink("Producto", "Index", new { sortOrder = ViewBag.ProductoSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Nombre)
+            @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.NombreSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Activo)
+            @Html.ActionLink("Activo", "Index", new { sortOrder = ViewBag.ActivoSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th></th>
     </tr>
@@ -33,7 +43,7 @@
             @Html.DisplayFor(modelItem => item.Nombre)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Activo)
+            @(item.Activo ? "Si" : "No")
         </td>
         <td>
             @Html.ImageActionLink("Editar", "Edit", "Problemas", new { id = item.IdProblema }, null) |
@@ -42,5 +52,12 @@
         </td>
     </tr>
 }
-
 </table>
+@{
+    if (Model.PageCount > 1)
+    {
+        <text>Página</text> @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) <text>de</text> @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    }
+}

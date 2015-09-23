@@ -148,5 +148,30 @@ namespace ms_tech.Helpers
 
             return MvcHtmlString.Create(parent.ToString());
         }
+
+        public static IHtmlString BotonEliminar(this HtmlHelper htmlHelper, string texto)
+        {
+            var icon = new TagBuilder("i");
+            icon.Attributes.Add("class", "glyphicon glyphicon-remove");
+
+            var span = new TagBuilder("span");
+            span.SetInnerText(" " + texto);
+
+            StringBuilder innerHtml = new StringBuilder();
+            innerHtml.Append(icon.ToString(TagRenderMode.Normal));
+            innerHtml.Append(span.ToString(TagRenderMode.Normal));
+
+            TagBuilder parent = new TagBuilder("button");
+            parent.Attributes.Add("type", "submit");
+            parent.InnerHtml = innerHtml.ToString();
+            parent.Attributes.Add("class", "btn btn-default");
+
+            return MvcHtmlString.Create(parent.ToString());
+        }
+
+        public static IHtmlString BotonEliminar(this HtmlHelper htmlHelper)
+        {
+            return BotonEliminar(htmlHelper, "Eliminar");
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ms_tech.Models;
+using PagedList;
 
 namespace ms_tech.Controllers
 {
@@ -15,15 +16,61 @@ namespace ms_tech.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Problemas
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             if (!Request.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Usuarios", new { r = "/Problemas/Index" });
             }
 
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.ProductoSortParm = sortOrder == "producto" ? "producto_desc" : "producto";
+            ViewBag.NombreSortParm = sortOrder == "nombre" ? "nombre_desc" : "nombre";
+            ViewBag.ActivoSortParm = sortOrder == "activo" ? "activo_desc" : "activo";
+
+            if (searchString != null)
+                page = 1;
+            else
+                searchString = currentFilter;
+
+            ViewBag.CurrentFilter = searchString;
+
             var problemas = db.Problemas.Include(p => p.Productos);
-            return View(problemas.ToList());
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                problemas = problemas.Where(s => s.Nombre.Contains(searchString) || s.Productos.Nombre.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "producto":
+                    problemas = problemas.OrderBy(c => c.Productos.Nombre);
+                    break;
+                case "producto_desc":
+                    problemas = problemas.OrderByDescending(c => c.Productos.Nombre);
+                    break;
+                case "nombre":
+                    problemas = problemas.OrderBy(c => c.Nombre);
+                    break;
+                case "nombre_desc":
+                    problemas = problemas.OrderByDescending(c => c.Nombre);
+                    break;
+                case "activo":
+                    problemas = problemas.OrderByDescending(c => c.Activo);
+                    break;
+                case "activo_desc":
+                    problemas = problemas.OrderBy(c => c.Activo);
+                    break;
+                default:
+                    problemas = problemas.OrderBy(c => c.Nombre);
+                    break;
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            return View(problemas.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Problemas/Details/5
