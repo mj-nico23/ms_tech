@@ -12,8 +12,8 @@ CREATE TABLE [dbo].[Clientes]
 [FechaCreacion] [datetime] NOT NULL,
 [FechaModificacion] [datetime] NOT NULL
 ) ON [PRIMARY]
+ALTER TABLE [dbo].[Clientes] WITH NOCHECK ADD
+CONSTRAINT [FK_Clientes_ClientesTipos] FOREIGN KEY ([IdClienteTipo]) REFERENCES [dbo].[ClientesTipos] ([IdClienteTipo])
 GO
 ALTER TABLE [dbo].[Clientes] ADD CONSTRAINT [PK_Clientes] PRIMARY KEY CLUSTERED  ([IdCliente]) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[Clientes] ADD CONSTRAINT [FK_Clientes_ClientesTipos] FOREIGN KEY ([IdClienteTipo]) REFERENCES [dbo].[ClientesTipos] ([IdClienteTipo])
 GO

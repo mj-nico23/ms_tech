@@ -10,8 +10,8 @@ CREATE TABLE [dbo].[Usuarios]
 [FechaCreacion] [datetime] NOT NULL,
 [FechaModificacion] [datetime] NOT NULL
 ) ON [PRIMARY]
+ALTER TABLE [dbo].[Usuarios] WITH NOCHECK ADD
+CONSTRAINT [FK_Usuarios_UsuariosTipos] FOREIGN KEY ([IdUsuarioTipo]) REFERENCES [dbo].[UsuariosTipos] ([IdUsuarioTipo])
 GO
 ALTER TABLE [dbo].[Usuarios] ADD CONSTRAINT [PK_Usuarios] PRIMARY KEY CLUSTERED  ([IdUsuario]) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[Usuarios] ADD CONSTRAINT [FK_Usuarios_UsuariosTipos] FOREIGN KEY ([IdUsuarioTipo]) REFERENCES [dbo].[UsuariosTipos] ([IdUsuarioTipo])
 GO

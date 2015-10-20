@@ -7,8 +7,8 @@ CREATE TABLE [dbo].[Soluciones]
 [FechaCreacion] [datetime] NOT NULL,
 [FechaModificacion] [datetime] NOT NULL
 ) ON [PRIMARY]
+ALTER TABLE [dbo].[Soluciones] WITH NOCHECK ADD
+CONSTRAINT [FK_Soluciones_Problemas] FOREIGN KEY ([IdProblema]) REFERENCES [dbo].[Problemas] ([IdProblema])
 GO
 ALTER TABLE [dbo].[Soluciones] ADD CONSTRAINT [PK_Soluciones] PRIMARY KEY CLUSTERED  ([IdSolucion]) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[Soluciones] ADD CONSTRAINT [FK_Soluciones_Problemas] FOREIGN KEY ([IdProblema]) REFERENCES [dbo].[Problemas] ([IdProblema])
 GO
