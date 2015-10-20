@@ -27,6 +27,8 @@ namespace ms_tech.Models
         [StringLength(500)]
         public string Observacion { get; set; }
 
+        public bool Finalizado { get; set; }
+
         public virtual Estados Estados { get; set; }
 
         public virtual Incidentes Incidentes { get; set; }

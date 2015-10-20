@@ -1,0 +1,53 @@
+﻿@model ms_tech.Models.Estados
+@using ms_tech.Helpers;
+
+@{
+    ViewBag.Title = "Eliminar";
+}
+
+<h2>
+    Estado:&nbsp;
+    @Html.DisplayFor(model => model.Nombre)
+</h2>
+
+<h3>Esta seguro que desea eliminar este estado?</h3>
+<span style="color:red">@ViewBag.Error</span>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Finalizado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Finalizado)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            @Html.IconButton("Volver", "Index", "Estados", null, null, "")
+            @Html.BotonEliminar()
+        </div>
+    }
+</div>

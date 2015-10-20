@@ -22,6 +22,8 @@ namespace ms_tech.Models
 
         public bool Activo { get; set; }
 
+        public bool Finalizado { get; set; }
+
         public virtual ICollection<IncidentesEstados> IncidentesEstados { get; set; }
     }
 }

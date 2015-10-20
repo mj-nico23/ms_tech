@@ -10,6 +10,7 @@ using ms_tech.Models;
 using ms_tech.ViewModels;
 using ms_tech.Clases;
 using PagedList;
+using System.Text;
 
 namespace ms_tech.Controllers
 {
@@ -245,6 +246,7 @@ namespace ms_tech.Controllers
                 IncidentesEstados incidentesEstados = new IncidentesEstados();
                 incidentesEstados.IdIncidente = incidentes.IdIncidente;
                 incidentesEstados.IdEstado = 1;
+                incidentesEstados.Finalizado = false;
                 incidentesEstados.FechaActualizacion = DateTime.Now;
                 incidentesEstados.IdUsuario = incidentes.IdUsuario;
                 incidentesEstados.Observacion = "Alta de incidente.";
@@ -405,7 +407,8 @@ namespace ms_tech.Controllers
                                                     Productos = p1,
                                                     Clientes = c,
                                                     IncidentesEstados = ie.FirstOrDefault(),
-                                                    NombreUsuario = u.Email
+                                                    NombreUsuario = u.Email,
+                                                    IdPrioridad = p2.IdPrioridad,
                                                 }).FirstOrDefault();
 
             if (incidentesVM == null)
@@ -452,6 +455,9 @@ namespace ms_tech.Controllers
                 incidentesEstados.Observacion = incidentesVM.Observaciones;
                 db.IncidentesEstados.Add(incidentesEstados);
                 db.SaveChanges();
+
+                ActualizarMarcaFinalizado(incidentesEstados.IdEstado, incidentesEstados.IdIncidente);
+
                 return RedirectToAction("Index");
             }
 
@@ -614,6 +620,22 @@ namespace ms_tech.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void ActualizarMarcaFinalizado(int idEstado, int idIncidentes)
+        {
+            StringBuilder sbQuery = new StringBuilder();
+            sbQuery.AppendLine("IF (SELECT Finalizado FROM dbo.Estados WHERE IdEstado=" + idEstado + ") = 1");
+            sbQuery.AppendLine("BEGIN");
+            sbQuery.AppendLine("	UPDATE dbo.IncidentesEstados SET Finalizado=1");
+            sbQuery.AppendLine("	WHERE IdIncidenteEstado = (");
+            sbQuery.AppendLine("								SELECT MAX(IdIncidenteEstado) ");
+            sbQuery.AppendLine("								FROM dbo.IncidentesEstados");
+            sbQuery.AppendLine("								WHERE IdIncidente=" + idIncidentes + "");
+            sbQuery.AppendLine("								)");
+            sbQuery.AppendLine("END	");
+
+            db.Database.ExecuteSqlCommand(sbQuery.ToString());
         }
     }
 }

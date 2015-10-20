@@ -1,0 +1,42 @@
+﻿@model ms_tech.Models.Estados
+@using ms_tech.Helpers;
+
+@{
+    ViewBag.Title = "Detalle Estado";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Finalizado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Finalizado)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.IconButton("Volver", "Index", "Estados", null, null, "")
+    @Html.IconButton("Editar", "Edit", "Estados", new { id = Model.IdEstado }, null, "")
+</p>

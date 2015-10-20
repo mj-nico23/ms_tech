@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Incidentes</h4>
         <hr />
@@ -60,7 +60,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.IdPrioridad, "Prioridad", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("IdPrioridad", (IEnumerable<SelectListItem>)ViewBag.IdPrioridad, htmlAttributes: new { @class = "form-control", @disabled = "true" })
+                @Html.DropDownList("IdPrioridad", null, htmlAttributes: new { @class = "form-control", @disabled = "true" })
                 @Html.ValidationMessageFor(model => model.IdPrioridad, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -68,7 +68,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.IdEstado, "Estado", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("IdEstado", (IEnumerable<SelectListItem>)ViewBag.IdEstado, htmlAttributes: new { @class = "form-control" })
+                
+                @Html.DropDownList("IdEstado", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.IdEstado, "", new { @class = "text-danger" })
             </div>
         </div>
